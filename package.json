@@ -1,0 +1,28 @@
+{
+  "name": "cavearium",
+  "version": "1.0.0",
+  "description": "2d game with procedural generated world",
+  "main": "index.js",
+  "scripts": {
+    "build:dev": "webpack",
+    "start": "node server/app.js",
+    "dev-server": "webpack-dev-server"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@types/pixi.js": "^4.8.9",
+    "@types/random": "^2.1.0",
+    "express": "^4.17.1",
+    "open-simplex-noise": "^1.6.0",
+    "pixi.js": "^5.1.3",
+    "random": "^2.1.1",
+    "ts-loader": "^6.0.4",
+    "typescript": "^3.6.2",
+    "webpack": "^4.39.3",
+    "webpack-cli": "^3.3.8"
+  },
+  "devDependencies": {
+    "webpack-dev-server": "^3.8.0"
+  }
+}
