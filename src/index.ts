@@ -10,7 +10,7 @@ const onLoad = ()=>{
     const world = new World(400, 400);
 
     app.ticker.add(()=>{
-
+        //world.updateWorld();
     })
 }
 loadResourses(onLoad);

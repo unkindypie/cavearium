@@ -44,7 +44,7 @@ class World /*extends PIXI.Container*/ {
             for(let bx = 0; bx < Chunk.chunkSize; bx++){
                 const noiseValue = noise.noise2D(xoff, yoff);
                 if(noiseValue > 0){
-                    blocks[by][bx] = new Block('ground', (bx + x) * 8, (by + y) * 8);
+                    blocks[by][bx] = new Block('ground', (bx + x) * Block.size, (by + y) * Block.size);
                 }
                 else{
                     blocks[by][bx] = null;
@@ -52,11 +52,22 @@ class World /*extends PIXI.Container*/ {
                 xoff += this.noiseIncrement;
             }
         }
-        const chunk = new Chunk(blocks);
+        const chunk = new Chunk(blocks, x * Block.size, y * Block.size);
         viewport.addChild(chunk);
         return chunk;
     }
 
+    public updateWorld(){
+        const bounds = viewport.getBounds();
+
+        
+        // for(let i = 0; i < this.chunks.length; i++){
+        //     this.chunks[i].visible = bounds.top > this.chunks[i].rect.top 
+        //     && bounds.left > this.chunks[i].rect.left 
+        //     && bounds.right < this.chunks[i].rect.right 
+        //     && bounds.bottom < this.chunks[i].rect.bottom;
+        // }
+    }
     // private generateWorld(){
     //     this.seed = Math.random() * 100;
     //     const noise = new OpenSimplexNoise(this.seed);
