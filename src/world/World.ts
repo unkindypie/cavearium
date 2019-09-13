@@ -10,7 +10,7 @@ class World /*extends PIXI.Container*/ {
     public chunks: Chunk[] = [];
     tilesWidth: number;
     tilesHeight: number;
-    noiseIncrement:number = 0.07;
+    noiseIncrement:number = 0.05;
 
     constructor(tilesWidth: number = 400, tilesHeight: number = 400){
         //super();
@@ -19,7 +19,7 @@ class World /*extends PIXI.Container*/ {
         this.generateWorld();
     }
     private generateWorld(){
-        this.seed = Math.random() * 100;
+        this.seed = Math.random() * 10000;
         for(let y = 0; y < this.tilesHeight; y += Chunk.chunkSize){
             for(let x = 0; x < this.tilesWidth; x += Chunk.chunkSize){
                this.chunks.push(this.generateChunk(x, y));
@@ -28,6 +28,7 @@ class World /*extends PIXI.Container*/ {
     }
     private generateChunk(x: number, y: number): Chunk{
         const noise = new OpenSimplexNoise(this.seed);
+        
 
         //считаю аргументы для шума
         const xoffStart = x * this.noiseIncrement;
@@ -43,7 +44,7 @@ class World /*extends PIXI.Container*/ {
 
             for(let bx = 0; bx < Chunk.chunkSize; bx++){
                 const noiseValue = noise.noise2D(xoff, yoff);
-                if(noiseValue > 0){
+                if(noiseValue > 0.1 ){
                     blocks[by][bx] = new Block('ground', (bx + x) * Block.size, (by + y) * Block.size);
                 }
                 else{
@@ -58,15 +59,12 @@ class World /*extends PIXI.Container*/ {
     }
 
     public updateWorld(){
-        const bounds = viewport.getBounds();
+        const bounds = viewport.getVisibleBounds();
 
-        
-        // for(let i = 0; i < this.chunks.length; i++){
-        //     this.chunks[i].visible = bounds.top > this.chunks[i].rect.top 
-        //     && bounds.left > this.chunks[i].rect.left 
-        //     && bounds.right < this.chunks[i].rect.right 
-        //     && bounds.bottom < this.chunks[i].rect.bottom;
-        // }
+        for(let i = 0; i < this.chunks.length; i++){
+            this.chunks[i].visible = !(this.chunks[i].rect.right <= bounds.x || this.chunks[i].rect.left >= bounds.x + bounds.width ||
+            this.chunks[i].rect.bottom <= bounds.y || this.chunks[i].rect.top >= bounds.y + bounds.height);
+        }
     }
     // private generateWorld(){
     //     this.seed = Math.random() * 100;

@@ -7,10 +7,10 @@ import viewport from './pixi/viewport'
 
 
 const onLoad = ()=>{
-    const world = new World(400, 400);
+    const world = new World(1700, 1700);
 
     app.ticker.add(()=>{
-        //world.updateWorld();
+        world.updateWorld();
     })
 }
 loadResourses(onLoad);

@@ -26,5 +26,13 @@
   },
   "devDependencies": {
     "webpack-dev-server": "^3.8.0"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/iFullmetal/cavearium.git"
+  },
+  "bugs": {
+    "url": "https://github.com/iFullmetal/cavearium/issues"
+  },
+  "homepage": "https://github.com/iFullmetal/cavearium#readme"
 }
