@@ -59,12 +59,31 @@ class World /*extends PIXI.Container*/ {
     }
 
     public updateWorld(){
+        //      culling
         const bounds = viewport.getVisibleBounds();
 
         for(let i = 0; i < this.chunks.length; i++){
-            this.chunks[i].visible = !(this.chunks[i].rect.right <= bounds.x || this.chunks[i].rect.left >= bounds.x + bounds.width ||
-            this.chunks[i].rect.bottom <= bounds.y || this.chunks[i].rect.top >= bounds.y + bounds.height);
+
+            if(this.chunks[i].visible = !(this.chunks[i].rect.right <= bounds.x || this.chunks[i].rect.left >= bounds.x + bounds.width ||
+                this.chunks[i].rect.bottom <= bounds.y || this.chunks[i].rect.top >= bounds.y + bounds.height))
+            {
+                let beginY = bounds.y - this.chunks[i].rect.y;
+                let endY = bounds.y + bounds.height - this.chunks[i].rect.y;
+
+                if(beginY < 0) beginY = 0;
+                if(endY > this.chunks[i].rect.bottom) endY = this.chunks[i].rect.bottom;
+
+                let beginX = bounds.x - this.chunks[i].rect.x;
+                let endX = bounds.x + bounds.width - this.chunks[i].rect.x
+
+                if(beginX < 0) beginX = 0;
+                if(endX > this.chunks[i].rect.right) endX = this.chunks[i].rect.right;
+
+                this.chunks[i].update((beginX/Block.size)^0, (beginY/Block.size)^0, (endX/Block.size)^0, (endY/Block.size)^0);
+            }
         }
+        
+
     }
     // private generateWorld(){
     //     this.seed = Math.random() * 100;

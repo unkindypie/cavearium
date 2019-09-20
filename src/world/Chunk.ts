@@ -21,8 +21,13 @@ export default class Chunk extends PIXI.Container {
         }
 
     }
-    update(){
-        //TODO: апдейтить, когда пересекает вьпорт
+    update(beginX: number, beginY: number, endX: number, endY: number){
+        for(let i = 0; i < Chunk.chunkSize; i++){
+            for(let j = 0; j < Chunk.chunkSize; j++){
+                if(!this.static[i][j]) continue;
+                this.static[i][j].visible = i >= beginY && i <= endY && j >= beginX && j <= endX;
+            }
+        }
     }
 
 }

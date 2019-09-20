@@ -2,7 +2,9 @@ import * as PIXI from 'pixi.js'
 const app = new PIXI.Application({
     resolution: 1,
     width: document.documentElement.clientWidth,
-    height: document.documentElement.clientHeight
+    height: document.documentElement.clientHeight,
+    //запрещаю рендеру начинать рендерить самовольно
+    autoStart: false
 });
 
 
