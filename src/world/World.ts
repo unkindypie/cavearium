@@ -79,11 +79,10 @@ class World /*extends PIXI.Container*/ {
                 if(beginX < 0) beginX = 0;
                 if(endX > this.chunks[i].rect.right) endX = this.chunks[i].rect.right;
 
+                
                 this.chunks[i].update((beginX/Block.size)^0, (beginY/Block.size)^0, (endX/Block.size)^0, (endY/Block.size)^0);
             }
         }
-        
-
     }
     // private generateWorld(){
     //     this.seed = Math.random() * 100;

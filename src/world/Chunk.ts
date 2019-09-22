@@ -1,11 +1,24 @@
 import * as PIXI from 'pixi.js'
-import Entity from '../entities/Entity'
 import Block from '../entities/Block'
 import viewport from '../pixi/viewport'
+import ECS from '../ECS/ecs'
+import Sprite from '../ECS/components/Sprite'
+import Position from '../ECS/components/Position'
+import Collision from '../ECS/components/Collision'
+import Entity from '../ECS/Entity';
+
 
 export default class Chunk extends PIXI.Container {
     public static: Block[][] = [];
-    public dymanic: Entity[] = [];
+
+    //entities that should't move
+    public obstacles: Entity[][] = [];
+    //components tables
+    public sprite_components: Sprite[] = [];
+    public position_components: Position[] = [];
+    public collision_components: Collision[] = [];
+
+
     public static readonly chunkSize = 16;
     public readonly rect: PIXI.Rectangle;
     constructor(blocks: Block[][], x: number, y: number){
