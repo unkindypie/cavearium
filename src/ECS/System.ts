@@ -1,7 +1,9 @@
 import Entity from './Entity'
-import Chunk from '../world/Chunk'
+import EntityContainer from './EntityContainer';
+
 
 export default abstract class System {
-    public abstract update(chunk: Chunk): void;
+    //public abstract initalize()
+    public abstract update(entityContainer: EntityContainer): void;
 }
 

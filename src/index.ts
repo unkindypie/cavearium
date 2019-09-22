@@ -22,8 +22,7 @@ const onLoad = ()=>{
     const block = new Entity(chunk);
     //chunk.static[0].push()
 
-    block.addComponent(new ECS.components.Position(0, 0)).
-    addComponent(new ECS.components.Sprite(loader.resources['ground'].texture));
+    block.addComponent(new ECS.components.Position(0, 0)).addComponent(new ECS.components.Sprite(loader.resources['ground'].texture));
 
     ECS.systems[0].update(chunk);
     

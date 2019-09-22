@@ -1,6 +1,6 @@
 import IComponent from "./components/IComponents";
 import ECS from "./ecs";
-import Chunk from "../world/Chunk";
+import EntityContainer from './EntityContainer'
 
 //components
 import Collision from './components/Collision';
@@ -8,11 +8,11 @@ import Sprite from './components/Sprite';
 import Position from './components/Position';
 
 export default class Entity {
-    public readonly id: number;
-    public chunk: Chunk;
+    public id: number;
+    public entityContainer: EntityContainer;
 
-    constructor(chunk: Chunk, id?: number){
-        this.chunk = chunk;
+    constructor(entityContainer: EntityContainer, id?: number){
+        this.entityContainer = entityContainer;
         if(!id){
             this.id = ECS.genareteEntityId();
             return;
@@ -20,26 +20,26 @@ export default class Entity {
         this.id = id;
     }
     public get Position(): Position {
-        return this.chunk.position_components[this.id];
+        return this.entityContainer.position_components[this.id];
     }
     public get Collision(): Collision {
-        return this.chunk.collision_components[this.id];
+        return this.entityContainer.collision_components[this.id];
     }
     public get Sprite(): Sprite {
-        return this.chunk.sprite_components[this.id];
+        return this.entityContainer.sprite_components[this.id];
     }
     public addComponent(component: IComponent) {
         
         switch(component.constructor.name){
         
             case 'Position': 
-                this.chunk.position_components[this.id] = component as Position;
+                this.entityContainer.position_components[this.id] = component as Position;
                 break;
             case 'Sprite':
-                this.chunk.sprite_components[this.id] = component as Sprite;
+                this.entityContainer.sprite_components[this.id] = component as Sprite;
                 break;
             case 'Collision':
-                this.chunk.collision_components[this.id] = component as Collision;
+                this.entityContainer.collision_components[this.id] = component as Collision;
                 break;
         }
         return this;
@@ -49,13 +49,13 @@ export default class Entity {
         switch(component.constructor.name){
         
             case 'Position': 
-                delete this.chunk.position_components[this.id];
+                delete this.entityContainer.position_components[this.id];
                 break;
             case 'Sprite':
-                delete this.chunk.sprite_components[this.id];
+                delete this.entityContainer.sprite_components[this.id];
                 break;
             case 'Collision':
-                delete this.chunk.collision_components[this.id];
+                delete this.entityContainer.collision_components[this.id];
                 break;
         }
         return this;
