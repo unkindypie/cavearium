@@ -8,4 +8,5 @@ export default interface EntityContainer {
      sprite_components: Sprite[];
      position_components: Position[];
      collision_components: Collision[];
+     child: EntityContainer;
 }

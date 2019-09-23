@@ -1,4 +1,4 @@
-import IComponent from "./components/IComponents";
+import IComponent from "./components/IComponent";
 import ECS from "./ecs";
 import EntityContainer from './EntityContainer'
 
@@ -19,6 +19,9 @@ export default class Entity {
         }
         this.id = id;
     }
+    public newId(){
+        this.id = ECS.genareteEntityId();
+    }
     public get Position(): Position {
         return this.entityContainer.position_components[this.id];
     }
@@ -32,11 +35,19 @@ export default class Entity {
         
         switch(component.constructor.name){
         
-            case 'Position': 
+            case 'Position':
+                if(this.entityContainer.sprite_components[this.id]){
+                    this.entityContainer.sprite_components[this.id].x = (component as Position).x;
+                    this.entityContainer.sprite_components[this.id].y = (component as Position).y;
+                } 
                 this.entityContainer.position_components[this.id] = component as Position;
                 break;
             case 'Sprite':
                 this.entityContainer.sprite_components[this.id] = component as Sprite;
+                if(this.entityContainer.position_components[this.id]){
+                    this.entityContainer.sprite_components[this.id].x = this.entityContainer.position_components[this.id].x;
+                    this.entityContainer.sprite_components[this.id].y = this.entityContainer.position_components[this.id].y;
+                }
                 break;
             case 'Collision':
                 this.entityContainer.collision_components[this.id] = component as Collision;

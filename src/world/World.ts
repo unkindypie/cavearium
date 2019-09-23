@@ -1,12 +1,13 @@
 import * as PIXI from 'pixi.js'
 import OpenSimplexNoise from "../../node_modules/open-simplex-noise/lib/index";
-import Block from '../entities/Block'
 import Chunk from './Chunk'
 import viewport from '../pixi/viewport'
+import Tilemap from './Tilemap'
+import Entity from '../ECS/Entity'
+import ECS from '../ECS/ecs';
 
 class World /*extends PIXI.Container*/ {
     public seed: number;
-    public world: Block[][] = [];
     public chunks: Chunk[] = [];
     tilesWidth: number;
     tilesHeight: number;
@@ -14,9 +15,11 @@ class World /*extends PIXI.Container*/ {
 
     constructor(tilesWidth: number = 400, tilesHeight: number = 400){
         //super();
+        console.log('generating world...')
         this.tilesWidth = tilesWidth;
         this.tilesHeight = tilesHeight;
         this.generateWorld();
+        console.log('done.')
     }
     private generateWorld(){
         this.seed = Math.random() * 10000;
@@ -30,83 +33,48 @@ class World /*extends PIXI.Container*/ {
         const noise = new OpenSimplexNoise(this.seed);
         
 
-        //считаю аргументы для шума
+        //calculating noise args considering offsets
         const xoffStart = x * this.noiseIncrement;
         let xoff;
         let yoff = y * this.noiseIncrement;
 
-        const blocks: Block[][] = [];
-
+        const tilemap = new Tilemap(x * ECS.assemblers.BlockAssembler.blockSize, y * ECS.assemblers.BlockAssembler.blockSize);
+        const block = new Entity(tilemap);
         for(let by = 0; by < Chunk.chunkSize; by++){
-            blocks[by] = [];
+            tilemap.map[by] = [];
             xoff = xoffStart;
             yoff += this.noiseIncrement;
 
             for(let bx = 0; bx < Chunk.chunkSize; bx++){
                 const noiseValue = noise.noise2D(xoff, yoff);
                 if(noiseValue > 0.1 ){
-                    blocks[by][bx] = new Block('ground', (bx + x) * Block.size, (by + y) * Block.size);
+                    //assembling block entity in tilemap
+                    ECS.assemblers.BlockAssembler.Assemble(block, 'ground', (bx + x) * ECS.assemblers.BlockAssembler.blockSize, (by + y) * ECS.assemblers.BlockAssembler.blockSize);
+                    tilemap.map[by][bx] = block.id; //saving it's id in map matrix
+                    block.newId(); //changing id
                 }
                 else{
-                    blocks[by][bx] = null;
+                    tilemap.map[by][bx] = -1;
                 }
                 xoff += this.noiseIncrement;
             }
         }
-        const chunk = new Chunk(blocks, x * Block.size, y * Block.size);
+        const chunk = new Chunk(tilemap);
         viewport.addChild(chunk);
         return chunk;
     }
 
     public updateWorld(){
-        //      culling
         const bounds = viewport.getVisibleBounds();
-
         for(let i = 0; i < this.chunks.length; i++){
-
             if(this.chunks[i].visible = !(this.chunks[i].rect.right <= bounds.x || this.chunks[i].rect.left >= bounds.x + bounds.width ||
                 this.chunks[i].rect.bottom <= bounds.y || this.chunks[i].rect.top >= bounds.y + bounds.height))
             {
-                let beginY = bounds.y - this.chunks[i].rect.y;
-                let endY = bounds.y + bounds.height - this.chunks[i].rect.y;
-
-                if(beginY < 0) beginY = 0;
-                if(endY > this.chunks[i].rect.bottom) endY = this.chunks[i].rect.bottom;
-
-                let beginX = bounds.x - this.chunks[i].rect.x;
-                let endX = bounds.x + bounds.width - this.chunks[i].rect.x
-
-                if(beginX < 0) beginX = 0;
-                if(endX > this.chunks[i].rect.right) endX = this.chunks[i].rect.right;
-
-                
-                this.chunks[i].update((beginX/Block.size)^0, (beginY/Block.size)^0, (endX/Block.size)^0, (endY/Block.size)^0);
+                ECS.updateSystems(this.chunks[i]);
             }
+            
         }
     }
-    // private generateWorld(){
-    //     this.seed = Math.random() * 100;
-    //     const noise = new OpenSimplexNoise(this.seed);
-
-    //     let xoff = 0;
-    //     let yoff = 0;
-    //     let inc = 0.07;
-
-    //     for(let y = 0; y < this.tilesHeight; y++){
-    //         this.world[y] = [];
-    //         xoff = 0;
-    //         yoff += inc;
-    //         for(let x = 0; x < this.tilesWidth; x++){
-    //             const noiseValue = noise.noise2D(xoff, yoff);
-    //             if(noiseValue > 0){
-    //                 this.world[y][x] = new Block('ground', x * 8, y * 8);
-    //                 viewport.addChild(this.world[y][x]);
-    //                 //this.addChild(this.world[y][x])
-    //             }
-    //             xoff += inc;
-    //         }
-    //     }   
-    // }
 }
 
 export default World

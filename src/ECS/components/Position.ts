@@ -1,4 +1,4 @@
-import IComponent from "./IComponents";
+import IComponent from "./IComponent";
 
 export default class Position implements IComponent{
     public x: number;

@@ -1,21 +1,23 @@
 import * as PIXI from 'pixi.js'
 import System from './System';
-import Chunk from "../world/Chunk";
+import EntityContainer from './EntityContainer';
 //components
 import Collision from './components/Collision';
 import Sprite from './components/Sprite';
 import Position from './components/Position';
 //systems
 import RenderSystem from './systems/RenderSystem'
-
+import TilemapRenderSystem from './systems/TilemapRenderSystem'
+//assemblers
+import BlockAssembler from './assemblers/BlockAssembler'
 
 export default class ECS {
     //for generating unique id
-    private static entityCount: number = 0;
+    private static iter: number = 0;
     private static entityIDs: number[] = [];
 
     //system object references
-    public static readonly systems: System[] = [new RenderSystem()];
+    public static readonly systems: System[] = [new TilemapRenderSystem(), new RenderSystem()];
 
     //component types references
     public static readonly components = {
@@ -24,11 +26,16 @@ export default class ECS {
         Sprite  
     };
 
+    public static readonly assemblers = {
+        BlockAssembler
+    }
+
     private constructor(){}
 
     public static genareteEntityId(): number {
         let id;
-
+        ECS.iter++;
+        return ECS.iter;
         do{
             id = (Math.random()*10000 + Date.now()/100000)^0;
         }
@@ -38,7 +45,11 @@ export default class ECS {
 
         return id;
     }
-
+    public static updateSystems(container: EntityContainer){
+        // for(let i = 0; i < this.systems.length; i++){
+        //     this.systems[i].update(container);
+        // }
+    }
     
 }
 
