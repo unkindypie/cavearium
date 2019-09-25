@@ -5,6 +5,7 @@ import viewport from '../pixi/viewport'
 import Tilemap from './Tilemap'
 import Entity from '../ECS/Entity'
 import ECS from '../ECS/ecs';
+import loader from '../pixi/loader';
 
 class World /*extends PIXI.Container*/ {
     public seed: number;
@@ -19,15 +20,40 @@ class World /*extends PIXI.Container*/ {
         this.tilesWidth = tilesWidth;
         this.tilesHeight = tilesHeight;
         this.generateWorld();
+        //Adding player
+        const player = new Entity(this.chunks[0]);
+        player.newId();
+        player.addComponent(new ECS.components.Sprite(loader.resources['player'].texture))
+            .addComponent(new ECS.components.Position(100, 100))
+            .addComponent(new ECS.components.Movement())
+            .addComponent(new ECS.components.Velocity(7))
+            .addComponent(new ECS.components.Acceleration(3, 0))
+            .addComponent(new ECS.components.PlayerControlled())
+            .addComponent(new ECS.components.Collision());
+        this.chunks[0].addChild(player.Sprite);
+        player.Sprite.anchor.x = player.Sprite.anchor.y = 0.5;
+        player.Sprite.width = player.Sprite.height = 64 * 4;
+        player.Movement.dirY = 1;
+
         console.log('done.')
     }
     private generateWorld(){
         this.seed = Math.random() * 10000;
         for(let y = 0; y < this.tilesHeight; y += Chunk.chunkSize){
             for(let x = 0; x < this.tilesWidth; x += Chunk.chunkSize){
-               this.chunks.push(this.generateChunk(x, y));
+                this.chunks.push(this.generateChunk(x, y));
+                if(this.chunks[this.chunks.length - 1 - this.tilesHeight/Chunk.chunkSize]){
+                    console.log('down-up');
+                    this.chunks[this.chunks.length-1].next.top = this.chunks[this.chunks.length - 1 - this.tilesHeight/Chunk.chunkSize];
+                    this.chunks[this.chunks.length - 1 - this.tilesHeight/Chunk.chunkSize].next.down = this.chunks[this.chunks.length-1];
+                }
+               
+                if(x != 0){
+                    this.chunks[this.chunks.length-1].next.left = this.chunks[this.chunks.length - 2];
+                    this.chunks[this.chunks.length - 2].next.right = this.chunks[this.chunks.length-1];
+                }    
             }
-        }   
+        }
     }
     private generateChunk(x: number, y: number): Chunk{
         const noise = new OpenSimplexNoise(this.seed);
@@ -40,6 +66,7 @@ class World /*extends PIXI.Container*/ {
 
         const tilemap = new Tilemap(x * ECS.assemblers.BlockAssembler.blockSize, y * ECS.assemblers.BlockAssembler.blockSize);
         const block = new Entity(tilemap);
+
         for(let by = 0; by < Chunk.chunkSize; by++){
             tilemap.map[by] = [];
             xoff = xoffStart;
@@ -48,10 +75,11 @@ class World /*extends PIXI.Container*/ {
             for(let bx = 0; bx < Chunk.chunkSize; bx++){
                 const noiseValue = noise.noise2D(xoff, yoff);
                 if(noiseValue > 0.1 ){
+                    block.newId(); //changing id
                     //assembling block entity in tilemap
                     ECS.assemblers.BlockAssembler.Assemble(block, 'ground', (bx + x) * ECS.assemblers.BlockAssembler.blockSize, (by + y) * ECS.assemblers.BlockAssembler.blockSize);
                     tilemap.map[by][bx] = block.id; //saving it's id in map matrix
-                    block.newId(); //changing id
+                    
                 }
                 else{
                     tilemap.map[by][bx] = -1;

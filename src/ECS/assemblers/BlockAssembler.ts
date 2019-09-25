@@ -4,7 +4,7 @@ import ECS from '../ecs';
 import loader from '../../pixi/loader';
 
 export default class BlockAssembler {
-    static blockSize: number = 16;
+    static blockSize: number = 64;
     public static Assemble(entity: Entity,type: string, x: number, y: number){
         switch(type){
             case 'ground':

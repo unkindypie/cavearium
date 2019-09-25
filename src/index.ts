@@ -10,7 +10,7 @@ let elapsedTime = 0;
 
 
 const onLoad = ()=>{
-    const world = new World(1200, 1200);
+    const world = new World(1280, 1280);
     
     app.ticker.add((delta)=>{
         elapsedTime += delta;

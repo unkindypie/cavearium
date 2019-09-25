@@ -38,6 +38,7 @@ export default class TilemapRenderSystem extends System {
         beginY = (beginY / ECS.assemblers.BlockAssembler.blockSize) ^ 0;
         endY = (endY / ECS.assemblers.BlockAssembler.blockSize) ^ 0;
         
+        const block = new Entity(tilemap);
         for(let i = 0; i < Tilemap.size; i++){
             if(!tilemap.map[i]) continue;
             for(let j = 0; j < Tilemap.size; j++){
@@ -45,11 +46,10 @@ export default class TilemapRenderSystem extends System {
                 if(!tilemap.map[i][j]) continue;
                 
                 //getting entity from tilemap
-                const entity = new Entity(tilemap, tilemap.map[i][j]);
-
-                if(!entity.Sprite) continue;
-
-                entity.Sprite.visible = i >= beginY && i <= endY && j >= beginX && j <= endX;
+                block.id = tilemap.map[i][j];
+                if(!block.Sprite) continue;
+                //changing it's visibility
+                block.Sprite.visible = i >= beginY && i <= endY && j >= beginX && j <= endX;
             }
         }
     }

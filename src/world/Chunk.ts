@@ -7,18 +7,27 @@ import Collision from '../ECS/components/Collision'
 import Entity from '../ECS/Entity';
 import EntityContainer from '../ECS/EntityContainer';
 import Tilemap from './Tilemap'
-
+interface NextChunks {
+    left: Chunk,
+    right: Chunk,
+    top: Chunk,
+    down: Chunk
+}
 export default class Chunk extends PIXI.Container implements EntityContainer{
 
     public static readonly chunkSize: number = Tilemap.size;
     public readonly rect: PIXI.Rectangle;
     public child: Tilemap;
     public tilemap: Tilemap;//reference to a child to rename it but still implementing the interface
+    public next: NextChunks;
     //components tables
     public sprite_components: Sprite[] = [];
     public position_components: Position[] = [];
     public collision_components: Collision[] = [];
-    
+    public movement_components: import("../ECS/components/Movement").default[] = [];
+    public acceleration_components: import("../ECS/components/Acceleration").default[] = [];
+    public velocity_components: import("../ECS/components/Velocity").default[] = [];
+    public playerControlled_components: import("../ECS/components/PlayerControlled").default[] = [];
 
 
     constructor(tilemap: Tilemap){
@@ -27,6 +36,8 @@ export default class Chunk extends PIXI.Container implements EntityContainer{
         this.child = tilemap;
         this.tilemap = this.child;
         this.rect = tilemap.rect;
+
+        this.next = {left: null, right: null, top: null, down: null};
 
         const block = new Entity(tilemap);
         for(let y = 0; y < this.tilemap.map.length; y++){
@@ -42,13 +53,4 @@ export default class Chunk extends PIXI.Container implements EntityContainer{
         }
 
     }
-    update(beginX: number, beginY: number, endX: number, endY: number){
-        // for(let i = 0; i < Chunk.chunkSize; i++){
-        //     for(let j = 0; j < Chunk.chunkSize; j++){
-        //         if(!this.static[i][j]) continue;
-        //         this.static[i][j].visible = i >= beginY && i <= endY && j >= beginX && j <= endX;
-        //     }
-        // }
-    }
-
 }

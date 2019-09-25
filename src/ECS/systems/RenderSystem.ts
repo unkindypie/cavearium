@@ -7,13 +7,12 @@ import Sprite from '../components/Sprite';
 import EntityContainer from '../EntityContainer';
 
 export default class RenderSystem extends System {
-    public initalize(chunk: Chunk, entity: Entity){
-        //if(chunk.)
-    }
     public update(container: EntityContainer): void {
-        // for(let i = 0; i < container.sprite_components.length; i++){
-        //     //chunk.sprite_components[i].visible = true;
-        // }
+        const bounds = viewport.getVisibleBounds();
+        for(let i in container.sprite_components){
+            container.sprite_components[i].visible = container.sprite_components[i].x >= bounds.x && container.sprite_components[i].x <= bounds.x + bounds.width
+            && container.sprite_components[i].y >= bounds.y && container.sprite_components[i].y <= bounds.y + bounds.height;
+        }
     }
 
 }

@@ -5,11 +5,16 @@ import EntityContainer from './EntityContainer';
 import Collision from './components/Collision';
 import Sprite from './components/Sprite';
 import Position from './components/Position';
+import Movement from './components/Movement'
+import Velocity from './components/Velocity'
+import Acceleration from './components/Acceleration'
+import PlayerControlled from './components/PlayerControlled'
 //systems
-import RenderSystem from './systems/RenderSystem'
-import TilemapRenderSystem from './systems/TilemapRenderSystem'
+import RenderSystem from './systems/RenderSystem';
+import TilemapRenderSystem from './systems/TilemapRenderSystem';
+import MovementSystem from './systems/MovementSystem';
 //assemblers
-import BlockAssembler from './assemblers/BlockAssembler'
+import BlockAssembler from './assemblers/BlockAssembler';
 
 export default class ECS {
     //for generating unique id
@@ -17,13 +22,17 @@ export default class ECS {
     private static entityIDs: number[] = [];
 
     //system object references
-    public static readonly systems: System[] = [new TilemapRenderSystem(), new RenderSystem()];
+    public static readonly systems: System[] = [new MovementSystem(), new TilemapRenderSystem(), new RenderSystem()];
 
-    //component types references
+    //component contructor references
     public static readonly components = {
         Position,
         Collision,
-        Sprite  
+        Sprite,
+        Movement,
+        Velocity,
+        Acceleration,
+        PlayerControlled  
     };
 
     public static readonly assemblers = {
@@ -46,9 +55,9 @@ export default class ECS {
         return id;
     }
     public static updateSystems(container: EntityContainer){
-        // for(let i = 0; i < this.systems.length; i++){
-        //     this.systems[i].update(container);
-        // }
+        for(let i = 0; i < this.systems.length; i++){
+            this.systems[i].update(container);
+        }
     }
     
 }
