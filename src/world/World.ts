@@ -6,13 +6,16 @@ import Tilemap from './Tilemap'
 import Entity from '../ECS/Entity'
 import ECS from '../ECS/ecs';
 import loader from '../pixi/loader';
+import * as WorleyNoise from 'worley-noise'
+
 
 class World /*extends PIXI.Container*/ {
     public seed: number;
     public chunks: Chunk[] = [];
     tilesWidth: number;
     tilesHeight: number;
-    noiseIncrement:number = 0.05;
+    caveNoiseIncrement:number = 0.05;
+    asteroidNoiseIncrement: number = 0.002;
 
     constructor(tilesWidth: number = 400, tilesHeight: number = 400){
         //super();
@@ -43,7 +46,6 @@ class World /*extends PIXI.Container*/ {
             for(let x = 0; x < this.tilesWidth; x += Chunk.chunkSize){
                 this.chunks.push(this.generateChunk(x, y));
                 if(this.chunks[this.chunks.length - 1 - this.tilesHeight/Chunk.chunkSize]){
-                    console.log('down-up');
                     this.chunks[this.chunks.length-1].next.top = this.chunks[this.chunks.length - 1 - this.tilesHeight/Chunk.chunkSize];
                     this.chunks[this.chunks.length - 1 - this.tilesHeight/Chunk.chunkSize].next.down = this.chunks[this.chunks.length-1];
                 }
@@ -57,12 +59,20 @@ class World /*extends PIXI.Container*/ {
     }
     private generateChunk(x: number, y: number): Chunk{
         const noise = new OpenSimplexNoise(this.seed);
-        
+        const asteroidNoise = new OpenSimplexNoise((this.seed /2 + 12312124)/4);
+        const worleyNoise = new WorleyNoise({
+            numPoints: 15,
+            seed: this.seed
+        });
 
         //calculating noise args considering offsets
-        const xoffStart = x * this.noiseIncrement;
+        const xoffStart = x * this.caveNoiseIncrement;
         let xoff;
-        let yoff = y * this.noiseIncrement;
+        let yoff = y * this.caveNoiseIncrement;
+        let asteroid_xoffStart = x * this.asteroidNoiseIncrement;
+        let asteroid_xoff;
+        let asteroid_yoff = y * this.asteroidNoiseIncrement;
+        //const worleyNoiseBreakpoint =  1/((this.tilesHeight < this.tilesWidth ? this.tilesHeight : this.tilesWidth)/5)//130)
 
         const tilemap = new Tilemap(x * ECS.assemblers.BlockAssembler.blockSize, y * ECS.assemblers.BlockAssembler.blockSize);
         const block = new Entity(tilemap);
@@ -70,21 +80,27 @@ class World /*extends PIXI.Container*/ {
         for(let by = 0; by < Chunk.chunkSize; by++){
             tilemap.map[by] = [];
             xoff = xoffStart;
-            yoff += this.noiseIncrement;
+            yoff += this.caveNoiseIncrement;
+            asteroid_xoff = asteroid_xoffStart;
+            asteroid_yoff += this.asteroidNoiseIncrement;
 
             for(let bx = 0; bx < Chunk.chunkSize; bx++){
-                const noiseValue = noise.noise2D(xoff, yoff);
-                if(noiseValue > 0.1 ){
+                const caveNoiseValue = noise.noise2D(xoff, yoff);
+                const asteroidNoiseValue = asteroidNoise.noise2D(asteroid_xoff, asteroid_yoff);
+                const worleyNoiseValue = worleyNoise.getEuclidean({x: (x + bx)/this.tilesWidth, y: (y + by)/this.tilesHeight}, 1);
+
+                //// 1
+                if(worleyNoiseValue / Math.abs(asteroidNoiseValue) < 0.2 && caveNoiseValue < (worleyNoiseValue/Math.abs(asteroidNoiseValue)) * 4){
                     block.newId(); //changing id
                     //assembling block entity in tilemap
                     ECS.assemblers.BlockAssembler.Assemble(block, 'ground', (bx + x) * ECS.assemblers.BlockAssembler.blockSize, (by + y) * ECS.assemblers.BlockAssembler.blockSize);
                     tilemap.map[by][bx] = block.id; //saving it's id in map matrix
-                    
                 }
                 else{
                     tilemap.map[by][bx] = -1;
                 }
-                xoff += this.noiseIncrement;
+                xoff += this.caveNoiseIncrement;
+                asteroid_xoff += this.asteroidNoiseIncrement;
             }
         }
         const chunk = new Chunk(tilemap);
