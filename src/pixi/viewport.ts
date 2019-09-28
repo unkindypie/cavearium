@@ -19,6 +19,6 @@ viewport
     .drag()
     .pinch()
     .wheel()
-    .decelerate()
+    .decelerate();
 
 export default viewport;

@@ -1,12 +1,36 @@
 import System from "../System";
 import EntityContainer from '../EntityContainer';
-import InputManager from '../../utils/InputManager';
+import inputManager from '../../utils/InputManager';
+import viewport from '../../pixi/viewport';
+import { Point } from "pixi.js";
 
-class PlayerInputSystem extends System {
+export default class PlayerInputSystem extends System {
     public update(entityContainer: EntityContainer): void {
-        for(let id in entityContainer.playerControlled_components){
-            
+        for(let id_ in entityContainer.playerControlled_components){
+            const id = parseInt(id_); 
+            if(entityContainer.velocity_components[id]){
+                if(inputManager.actions.forward){
+                    console.log('forward');
+                    entityContainer.velocity_components[id].velocity = entityContainer.velocity_components[id].absoluteVelocity;
+                }
+                else{
+                    entityContainer.velocity_components[id].velocity = 0;
+                }
+            }
+            if(entityContainer.movement_components[id] && entityContainer.position_components[id]){
+                const mouse = viewport.toWorld(inputManager.screenPointer);
+                
+                //vector from player to mouse
+                const deltaDirX = mouse.x  - entityContainer.position_components[id].x;
+                const deltaDirY = mouse.y  - entityContainer.position_components[id].y;
+                
+                //normalizing vector
+                const dirLength = Math.sqrt(deltaDirX * deltaDirX + deltaDirY * deltaDirY);
+                entityContainer.movement_components[id].dirX = deltaDirX / dirLength;
+                entityContainer.movement_components[id].dirY = deltaDirY / dirLength;
+                
+            }
+
         }
     }
-    
 }

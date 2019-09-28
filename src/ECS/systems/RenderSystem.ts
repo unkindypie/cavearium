@@ -9,9 +9,10 @@ import EntityContainer from '../EntityContainer';
 export default class RenderSystem extends System {
     public update(container: EntityContainer): void {
         const bounds = viewport.getVisibleBounds();
-        for(let i in container.sprite_components){
-            container.sprite_components[i].visible = container.sprite_components[i].x >= bounds.x && container.sprite_components[i].x <= bounds.x + bounds.width
-            && container.sprite_components[i].y >= bounds.y && container.sprite_components[i].y <= bounds.y + bounds.height;
+        for(let id_ in container.sprite_components){
+            const id = parseInt(id_); 
+            container.sprite_components[id].visible = container.sprite_components[id].x >= bounds.x && container.sprite_components[id].x <= bounds.x + bounds.width
+            && container.sprite_components[id].y >= bounds.y && container.sprite_components[id].y <= bounds.y + bounds.height;
         }
     }
 

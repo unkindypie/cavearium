@@ -53,13 +53,13 @@ export default class Entity {
         delete this.entityContainer.movement_components[this.id];
     }
     public switchContainer(newConrainer: EntityContainer){
-        newConrainer.acceleration_components[this.id] = this.entityContainer.acceleration_components[this.id];
-        newConrainer.collision_components[this.id] = this.entityContainer.collision_components[this.id];
-        newConrainer.sprite_components[this.id] = this.entityContainer.sprite_components[this.id];
-        newConrainer.position_components[this.id] = this.entityContainer.position_components[this.id];
-        newConrainer.velocity_components[this.id] = this.entityContainer.velocity_components[this.id];
-        newConrainer.playerControlled_components[this.id] = this.entityContainer.playerControlled_components[this.id];
-        newConrainer.movement_components[this.id] = this.entityContainer.movement_components[this.id];
+        if(this.entityContainer.acceleration_components[this.id]) newConrainer.acceleration_components[this.id] = this.entityContainer.acceleration_components[this.id];
+        if(this.entityContainer.collision_components[this.id]) newConrainer.collision_components[this.id] = this.entityContainer.collision_components[this.id];
+        if(this.entityContainer.sprite_components[this.id]) newConrainer.sprite_components[this.id] = this.entityContainer.sprite_components[this.id];
+        if(this.entityContainer.position_components[this.id]) newConrainer.position_components[this.id] = this.entityContainer.position_components[this.id];
+        if(this.entityContainer.velocity_components[this.id]) newConrainer.velocity_components[this.id] = this.entityContainer.velocity_components[this.id];
+        if(this.entityContainer.playerControlled_components[this.id]) newConrainer.playerControlled_components[this.id] = this.entityContainer.playerControlled_components[this.id];
+        if(this.entityContainer.movement_components[this.id]) newConrainer.movement_components[this.id] = this.entityContainer.movement_components[this.id];
         this.removeEntity();
         this.entityContainer = newConrainer;
     }

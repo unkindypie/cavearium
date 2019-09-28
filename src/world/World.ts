@@ -29,14 +29,32 @@ class World /*extends PIXI.Container*/ {
         player.addComponent(new ECS.components.Sprite(loader.resources['player'].texture))
             .addComponent(new ECS.components.Position(100, 100))
             .addComponent(new ECS.components.Movement())
-            .addComponent(new ECS.components.Velocity(7))
+            .addComponent(new ECS.components.Velocity(0))
             .addComponent(new ECS.components.Acceleration(3, 0))
             .addComponent(new ECS.components.PlayerControlled())
             .addComponent(new ECS.components.Collision());
         this.chunks[0].addChild(player.Sprite);
         player.Sprite.anchor.x = player.Sprite.anchor.y = 0.5;
         player.Sprite.width = player.Sprite.height = 64 * 4;
+        player.Velocity.absoluteVelocity = 64;
         player.Movement.dirY = 1;
+
+
+        for(let i = 0; i < 20; i++){
+            const player2 = new Entity(this.chunks[0]);
+            player2.newId();
+            player2.addComponent(new ECS.components.Sprite(loader.resources['player'].texture))
+                .addComponent(new ECS.components.Position(200 + 64 * 3 * i, 150))
+                .addComponent(new ECS.components.Movement())
+                .addComponent(new ECS.components.Velocity(7))
+                .addComponent(new ECS.components.Acceleration(3, 0))
+                .addComponent(new ECS.components.Collision());
+            this.chunks[0].addChild(player2.Sprite);
+            player2.Sprite.anchor.x = player2.Sprite.anchor.y = 0.5;
+            player2.Sprite.width = player2.Sprite.height = 64 * 3;
+            player2.Velocity.absoluteVelocity = 10;
+            player2.Movement.dirY = 1;
+        }
 
         console.log('done.')
     }

@@ -13,6 +13,7 @@ import PlayerControlled from './components/PlayerControlled'
 import RenderSystem from './systems/RenderSystem';
 import TilemapRenderSystem from './systems/TilemapRenderSystem';
 import MovementSystem from './systems/MovementSystem';
+import PlayerInputSystem from './systems/PlayerInputSystem';
 //assemblers
 import BlockAssembler from './assemblers/BlockAssembler';
 
@@ -22,7 +23,7 @@ export default class ECS {
     private static entityIDs: number[] = [];
 
     //system object references
-    public static readonly systems: System[] = [new MovementSystem(), new TilemapRenderSystem(), new RenderSystem()];
+    public static readonly systems: System[] = [new PlayerInputSystem(), new MovementSystem(), new TilemapRenderSystem(), new RenderSystem()];
 
     //component contructor references
     public static readonly components = {

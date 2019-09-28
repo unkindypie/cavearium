@@ -5,7 +5,6 @@ import World from './world/World'
 import viewport from './pixi/viewport'
 
 
-
 const FPS = 60;
 const frameTime = 1000/FPS;
 let elapsedTime = 0;
