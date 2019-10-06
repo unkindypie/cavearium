@@ -36,6 +36,10 @@ export default class ECS {
         PlayerControlled  
     };
 
+    //current bunch of EntitieContainers that are being updating
+    public static visibleConteiners: EntityContainer[] = [];
+
+    //bindings to fastly create specific entities
     public static readonly assemblers = {
         BlockAssembler
     }
@@ -55,9 +59,9 @@ export default class ECS {
 
         return id;
     }
-    public static updateSystems(container: EntityContainer){
+    public static updateSystems(container: EntityContainer, delta: number){
         for(let i = 0; i < this.systems.length; i++){
-            this.systems[i].update(container);
+            this.systems[i].update(container, delta);
         }
     }
     

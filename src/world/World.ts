@@ -16,6 +16,7 @@ class World /*extends PIXI.Container*/ {
     tilesHeight: number;
     caveNoiseIncrement:number = 0.05;
     asteroidNoiseIncrement: number = 0.002;
+    public visibleChunks: Chunk[] = [];
 
     constructor(tilesWidth: number = 400, tilesHeight: number = 400){
         //super();
@@ -90,9 +91,8 @@ class World /*extends PIXI.Container*/ {
         let asteroid_xoffStart = x * this.asteroidNoiseIncrement;
         let asteroid_xoff;
         let asteroid_yoff = y * this.asteroidNoiseIncrement;
-        //const worleyNoiseBreakpoint =  1/((this.tilesHeight < this.tilesWidth ? this.tilesHeight : this.tilesWidth)/5)//130)
 
-        const tilemap = new Tilemap(x * ECS.assemblers.BlockAssembler.blockSize, y * ECS.assemblers.BlockAssembler.blockSize);
+        const tilemap = new Tilemap(x * ECS.assemblers.BlockAssembler.blockSize, y * ECS.assemblers.BlockAssembler.blockSize, ECS.assemblers.BlockAssembler.blockSize * Tilemap.size, ECS.assemblers.BlockAssembler.blockSize * Tilemap.size);
         const block = new Entity(tilemap);
 
         for(let by = 0; by < Chunk.chunkSize; by++){
@@ -106,8 +106,7 @@ class World /*extends PIXI.Container*/ {
                 const caveNoiseValue = noise.noise2D(xoff, yoff);
                 const asteroidNoiseValue = asteroidNoise.noise2D(asteroid_xoff, asteroid_yoff);
                 const worleyNoiseValue = worleyNoise.getEuclidean({x: (x + bx)/this.tilesWidth, y: (y + by)/this.tilesHeight}, 1);
-
-                //// 1
+                
                 if(worleyNoiseValue / Math.abs(asteroidNoiseValue) < 0.2 && caveNoiseValue < (worleyNoiseValue/Math.abs(asteroidNoiseValue)) * 4){
                     block.newId(); //changing id
                     //assembling block entity in tilemap
@@ -126,13 +125,15 @@ class World /*extends PIXI.Container*/ {
         return chunk;
     }
 
-    public updateWorld(){
+    public updateWorld(delta: number){
         const bounds = viewport.getVisibleBounds();
         for(let i = 0; i < this.chunks.length; i++){
+            this.visibleChunks = [];
             if(this.chunks[i].visible = !(this.chunks[i].rect.right <= bounds.x || this.chunks[i].rect.left >= bounds.x + bounds.width ||
                 this.chunks[i].rect.bottom <= bounds.y || this.chunks[i].rect.top >= bounds.y + bounds.height))
             {
-                ECS.updateSystems(this.chunks[i]);
+                ECS.updateSystems(this.chunks[i], delta);
+                this.visibleChunks[i] = this.chunks[i];
             }
             
         }

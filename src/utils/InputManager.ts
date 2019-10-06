@@ -26,13 +26,11 @@ class InputManager {
 const inputManager = new InputManager();
 
 window.onkeydown = (e: any)=>{
-    console.log('keydown');
-    if(e.key == inputManager.keyboardLayout.forward){
+    if(e.key === inputManager.keyboardLayout.forward || e.key === inputManager.keyboardLayout.forward.toUpperCase()){
         inputManager.actions.forward = true;
     }
 }
 window.onkeyup = (e: any)=>{
-    console.log('keyup');
     if(e.key == inputManager.keyboardLayout.forward){
         inputManager.actions.forward = false;
     }

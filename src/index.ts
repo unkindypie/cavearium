@@ -5,23 +5,21 @@ import World from './world/World'
 import viewport from './pixi/viewport'
 
 
-const FPS = 60;
-const frameTime = 1000/FPS;
-let elapsedTime = 0;
-
+let frameCounter = 0;
 
 const onLoad = ()=>{
     const world = new World(1920, 1920);
-
+    world.updateWorld(0);
     app.ticker.add((delta)=>{
-        elapsedTime += delta;
-        
-        //if(elapsedTime >= frameTime){
-            world.updateWorld();
-            
-            app.render();
-            elapsedTime = 0;
-        //}
+        frameCounter++;
+
+        if(frameCounter % 2 === 0){
+            frameCounter = 0;
+            world.updateWorld(delta);
+            viewport.update(delta);
+        }
+       
+        app.render();
     })
     app.ticker.start();
 }

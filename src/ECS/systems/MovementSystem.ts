@@ -6,11 +6,12 @@ import viewport from '../../pixi/viewport';
 
 export default class MovementSystem extends System{
 
-    public update(entityContainer: EntityContainer): void {
+    public update(entityContainer: EntityContainer, delta: number): void {
         // if(entityContainer.child != null){
         //     this.update(entityContainer.child);
         // }
-        if(entityContainer.constructor.name != 'Chunk') return;
+        //if(!entityContainer) return;
+        if(entityContainer.constructor.name === 'Tilemap') return;
 
         for(let id_ in entityContainer.movement_components){
             const id = parseInt(id_);
@@ -18,8 +19,8 @@ export default class MovementSystem extends System{
             if(position){
                 let velocity = entityContainer.velocity_components[id].velocity;
                 if(!velocity) velocity = 0;
-                position.x += entityContainer.movement_components[id].dirX * velocity;
-                position.y += entityContainer.movement_components[id].dirY * velocity;
+                position.x += entityContainer.movement_components[id].dirX * velocity * delta;
+                position.y += entityContainer.movement_components[id].dirY * velocity * delta;
                 if(entityContainer.sprite_components[id]){
                     entityContainer.sprite_components[id].x = position.x;
                     entityContainer.sprite_components[id].y = position.y;
@@ -31,6 +32,8 @@ export default class MovementSystem extends System{
                     //rotating player sprite by his moving direction
                     entityContainer.sprite_components[id].rotation = 1.5708 + Math.atan2(entityContainer.movement_components[id].dirY, entityContainer.movement_components[id].dirX);
                 }
+
+                //continue;
 
                 //if we are outside the chunk we should be stored in another chunk
                 //TODO: будет работать коряво когда сделаю проверку коллизий, т.к. я могу быть половиной спрайта в одном чанке, половиной в другом

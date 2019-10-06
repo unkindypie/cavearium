@@ -17,8 +17,10 @@ export default class Tilemap implements EntityContainer {
     //tilemap parameters
     public static readonly size = 64;
     public readonly rect: PIXI.Rectangle;
-    constructor(x: number, y: number){
-        this.rect = new PIXI.Rectangle(x, y, ECS.assemblers.BlockAssembler.blockSize * Tilemap.size, ECS.assemblers.BlockAssembler.blockSize * Tilemap.size);
+
+    //values in pixels
+    constructor(x: number, y: number, width: number, height: number){
+        this.rect = new PIXI.Rectangle(x, y, width, height);
     }
 }
 

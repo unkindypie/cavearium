@@ -20,6 +20,10 @@ export default class TilemapRenderSystem extends System {
         const tilemap = container as Tilemap;
 
         const bounds = viewport.getVisibleBounds();
+        bounds.x -= ECS.assemblers.BlockAssembler.blockSize;
+        bounds.y -= ECS.assemblers.BlockAssembler.blockSize;
+        bounds.width += ECS.assemblers.BlockAssembler.blockSize;
+        bounds.height += ECS.assemblers.BlockAssembler.blockSize;
 
         let beginY = bounds.y - tilemap.rect.y;
         let endY = bounds.y + bounds.height - tilemap.rect.y;
@@ -38,10 +42,13 @@ export default class TilemapRenderSystem extends System {
         beginY = (beginY / ECS.assemblers.BlockAssembler.blockSize) ^ 0;
         endY = (endY / ECS.assemblers.BlockAssembler.blockSize) ^ 0;
         
+        const tilemapHeight = tilemap.rect.height/ECS.assemblers.BlockAssembler.blockSize;
+        const tilemapWidth = tilemap.rect.width/ECS.assemblers.BlockAssembler.blockSize;
+
         const block = new Entity(tilemap);
-        for(let i = 0; i < Tilemap.size; i++){
+        for(let i = 0; i < tilemapHeight; i++){
             if(!tilemap.map[i]) continue;
-            for(let j = 0; j < Tilemap.size; j++){
+            for(let j = 0; j < tilemapWidth; j++){
                 //if entity's id is -1 entity doesn't exist
                 if(!tilemap.map[i][j]) continue;
                 

@@ -6,6 +6,8 @@ import { Point } from "pixi.js";
 
 export default class PlayerInputSystem extends System {
     public update(entityContainer: EntityContainer): void {
+        if(entityContainer.constructor.name === 'Tilemap') return;
+        
         for(let id_ in entityContainer.playerControlled_components){
             const id = parseInt(id_); 
             if(entityContainer.velocity_components[id]){

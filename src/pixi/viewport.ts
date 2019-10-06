@@ -7,7 +7,7 @@ const viewport = new Viewport({
     screenHeight: window.innerHeight,
     worldWidth: 400 * 8,
     worldHeight: 400 * 8,
-
+    noTicker: true, // viewport do not have his own ticker now
     interaction: app.renderer.plugins.interaction // the interaction module is important for wheel to work properly when renderer.view is placed or scaled
 })
 
