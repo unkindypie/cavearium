@@ -17,8 +17,12 @@ export default class Tilemap implements EntityContainer {
     //tilemap parameters
     public static readonly size = 64;
     public readonly rect: PIXI.Rectangle;
+    //check is that tile has collision components
+    public isTileCollidable(x: number, y: number): boolean {
+        return !!this.collision_components[this.map[y][x]];
+    }
 
-    //values in pixels
+    //(values in pixels)
     constructor(x: number, y: number, width: number, height: number){
         this.rect = new PIXI.Rectangle(x, y, width, height);
     }

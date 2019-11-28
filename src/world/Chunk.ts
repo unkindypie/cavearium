@@ -51,6 +51,12 @@ export default class Chunk extends PIXI.Container implements EntityContainer{
                 }
             }
         }
+        const graphics = new PIXI.Graphics();
+        graphics.lineStyle(10, 0xFFFFFF, 1);
+        //graphics.beginFill(0xAA4F08);
+        graphics.drawRect(this.rect.x, this.rect.y, this.rect.width, this.rect.height);
+        graphics.endFill();
+        this.addChild(graphics);
 
     }
 }

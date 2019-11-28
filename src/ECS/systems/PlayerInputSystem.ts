@@ -12,7 +12,7 @@ export default class PlayerInputSystem extends System {
             const id = parseInt(id_); 
             if(entityContainer.velocity_components[id]){
                 if(inputManager.actions.forward){
-                    console.log('forward');
+                    //console.log('forward');
                     entityContainer.velocity_components[id].velocity = entityContainer.velocity_components[id].absoluteVelocity;
                 }
                 else{

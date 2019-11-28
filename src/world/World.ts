@@ -33,14 +33,14 @@ class World /*extends PIXI.Container*/ {
             .addComponent(new ECS.components.Velocity(0))
             .addComponent(new ECS.components.Acceleration(3, 0))
             .addComponent(new ECS.components.PlayerControlled())
-            .addComponent(new ECS.components.Collision());
+            .addComponent(new ECS.components.Collision(64 * 4, 64 * 4));
         this.chunks[0].addChild(player.Sprite);
         player.Sprite.anchor.x = player.Sprite.anchor.y = 0.5;
         player.Sprite.width = player.Sprite.height = 64 * 4;
         player.Velocity.absoluteVelocity = 64;
         player.Movement.dirY = 1;
 
-
+        return;
         for(let i = 0; i < 20; i++){
             const player2 = new Entity(this.chunks[0]);
             player2.newId();
@@ -49,7 +49,7 @@ class World /*extends PIXI.Container*/ {
                 .addComponent(new ECS.components.Movement())
                 .addComponent(new ECS.components.Velocity(7))
                 .addComponent(new ECS.components.Acceleration(3, 0))
-                .addComponent(new ECS.components.Collision());
+                .addComponent(new ECS.components.Collision(64 * 4, 64 * 4));
             this.chunks[0].addChild(player2.Sprite);
             player2.Sprite.anchor.x = player2.Sprite.anchor.y = 0.5;
             player2.Sprite.width = player2.Sprite.height = 64 * 3;
@@ -127,15 +127,15 @@ class World /*extends PIXI.Container*/ {
 
     public updateWorld(delta: number){
         const bounds = viewport.getVisibleBounds();
+        this.visibleChunks = [];
         for(let i = 0; i < this.chunks.length; i++){
-            this.visibleChunks = [];
+
             if(this.chunks[i].visible = !(this.chunks[i].rect.right <= bounds.x || this.chunks[i].rect.left >= bounds.x + bounds.width ||
                 this.chunks[i].rect.bottom <= bounds.y || this.chunks[i].rect.top >= bounds.y + bounds.height))
             {
                 ECS.updateSystems(this.chunks[i], delta);
-                this.visibleChunks[i] = this.chunks[i];
+                this.visibleChunks.push(this.chunks[i]);
             }
-            
         }
     }
 }
