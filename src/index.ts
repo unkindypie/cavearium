@@ -12,7 +12,6 @@ const onLoad = ()=>{
     world.updateWorld(0);
     app.ticker.start();
     startGameLoop((delta: any)=>{
-        console.log('update');
         world.updateWorld(delta);
         viewport.update(delta);
     })

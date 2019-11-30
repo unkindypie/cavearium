@@ -26,8 +26,8 @@ export const startGameLoop = (updateCallback: CallableFunction)=>{
         const curTime = Date.now();
         const delta = curTime - oldTime;
         oldTime = curTime;
-        updateCallback(delta / 1000);
-        app.renderer.render(app.stage);
+        updateCallback(delta * (60 / 1000)); //updates
+        app.renderer.render(app.stage); //render
         requestAnimationFrame(gameLoop);
     }
     let oldTime = Date.now();
