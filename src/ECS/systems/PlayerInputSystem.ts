@@ -21,7 +21,6 @@ export default class PlayerInputSystem extends System {
             }
             if(entityContainer.movement_components[id] && entityContainer.position_components[id]){
                 const mouse = viewport.toWorld(inputManager.screenPointer);
-                
                 //vector from player to mouse
                 const deltaDirX = mouse.x  - entityContainer.position_components[id].x;
                 const deltaDirY = mouse.y  - entityContainer.position_components[id].y;

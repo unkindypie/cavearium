@@ -12,16 +12,10 @@ export default class MovementSystem extends System{
     //translates entity's sprite to every crossed tile possitons in tilemap matrix
     private doesCollideWithTilemap(position: Position, size: Collision, chunk: Chunk, nested: boolean = false): boolean {
         const tilemap = chunk.tilemap;
-        //TODO: сделать округление типа 0.50 => 1, 0.49 => 0
-        console.log('yStart: ',Math.floor(((position.y - tilemap.rect.top)) / BlockAssembler.blockSize));
-        console.log('yEnd: ', Math.floor(((position.y - tilemap.rect.top + size.height)) / BlockAssembler.blockSize));
-        console.log('xStart: ', Math.floor(((position.x - tilemap.rect.left)) / BlockAssembler.blockSize));
-        console.log('xEnd: ', Math.floor(((position.x - tilemap.rect.left + size.width)) / BlockAssembler.blockSize) );
-        console.log('world x y: ', position.x, position.y);
-        for(let i = Math.floor(((position.y - tilemap.rect.top)) / BlockAssembler.blockSize); 
-            i < Math.floor(((position.y - tilemap.rect.top + size.height)) / BlockAssembler.blockSize); i++){
-            for(let j = Math.floor(((position.x - tilemap.rect.left)) / BlockAssembler.blockSize);
-                 j < Math.floor(((position.x - tilemap.rect.left + size.width)) / BlockAssembler.blockSize);j++ ){     
+        for(let i = Math.round(((position.y - size.height/2 - tilemap.rect.top)) / BlockAssembler.blockSize); 
+            i < Math.round(((position.y - tilemap.rect.top + size.height / 2)) / BlockAssembler.blockSize); i++){
+            for(let j = Math.round(((position.x - size.width/2 - tilemap.rect.left)) / BlockAssembler.blockSize);
+                 j < Math.round(((position.x - tilemap.rect.left + size.width/2)) / BlockAssembler.blockSize);j++ ){     
                     //recursive check for nearby chunks if they are crossed
                     if(!nested){
                         if(i < 0 && this.doesCollideWithTilemap(position, size, chunk.next.top, true)){
@@ -44,6 +38,7 @@ export default class MovementSystem extends System{
                         continue;
                     }
 
+                    //TODO: проверка не по наличию тайла с коллизиями, а по пересечению его ректа ректом сущности
                     if(tilemap.isTileCollidable(j, i)){
                         //console.log('collision', nested);
                         return true;
