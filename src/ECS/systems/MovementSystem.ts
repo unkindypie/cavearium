@@ -71,7 +71,11 @@ export default class MovementSystem extends System{
 
                 if(entityContainer.sprite_components[id]){
                     entityContainer.sprite_components[id].x = position.x;
-                    entityContainer.sprite_components[id].y = position.y;  
+                    entityContainer.sprite_components[id].y = position.y;
+                    if(entityContainer.collision_components[id]){
+                        console.log(entityContainer.sprite_components[id].getBounds());
+                    }  
+  
                 }
                 //if we are a player we should move the camera
                 //moving viewport to the player

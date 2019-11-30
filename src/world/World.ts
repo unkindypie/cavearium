@@ -40,7 +40,8 @@ class World /*extends PIXI.Container*/ {
         player.Velocity.absoluteVelocity = 60;
         player.Movement.dirY = 1;
 
-        return;
+        console.log('done.')
+        return ;
         for(let i = 0; i < 20; i++){
             const player2 = new Entity(this.chunks[0]);
             player2.newId();
