@@ -28,9 +28,15 @@ export default class PlayerInputSystem extends System {
                 
                 //normalizing vector
                 const dirLength = Math.sqrt(deltaDirX * deltaDirX + deltaDirY * deltaDirY);
-                entityContainer.movement_components[id].dirX = deltaDirX / dirLength;
-                entityContainer.movement_components[id].dirY = deltaDirY / dirLength;
+                let normalizedDirX = deltaDirX / dirLength;
+                let normalizedDirY = deltaDirY / dirLength;
+                entityContainer.movement_components[id].dirY = normalizedDirY;
+                entityContainer.movement_components[id].dirX = normalizedDirX;
                 
+                if(entityContainer.sprite_components[id]){
+                    //rotating player sprite by his moving direction
+                    entityContainer.sprite_components[id].rotation = 1.5708 + Math.atan2(entityContainer.movement_components[id].dirY, entityContainer.movement_components[id].dirX);
+                }
             }
 
         }

@@ -12,10 +12,16 @@ export default class MovementSystem extends System{
     //translates entity's sprite to every crossed tile possitons in tilemap matrix
     private doesCollideWithTilemap(position: Position, size: Collision, chunk: Chunk, nested: boolean = false): boolean {
         const tilemap = chunk.tilemap;
-        for(let i = ((((position.y - tilemap.rect.top) ^ 0) / BlockAssembler.blockSize)^0) - 1; 
-            i < Math.floor(((position.y - tilemap.rect.top + size.height) ^ 0) / BlockAssembler.blockSize) - 1; i++){
-            for(let j = ((((position.x - tilemap.rect.left) ^ 0) / BlockAssembler.blockSize) ^ 0) - 1;
-                 j < Math.floor(((position.x - tilemap.rect.left + size.width) ^ 0) / BlockAssembler.blockSize) - 1;j++ ){     
+        //TODO: сделать округление типа 0.50 => 1, 0.49 => 0
+        console.log('yStart: ',Math.floor(((position.y - tilemap.rect.top)) / BlockAssembler.blockSize));
+        console.log('yEnd: ', Math.floor(((position.y - tilemap.rect.top + size.height)) / BlockAssembler.blockSize));
+        console.log('xStart: ', Math.floor(((position.x - tilemap.rect.left)) / BlockAssembler.blockSize));
+        console.log('xEnd: ', Math.floor(((position.x - tilemap.rect.left + size.width)) / BlockAssembler.blockSize) );
+        console.log('world x y: ', position.x, position.y);
+        for(let i = Math.floor(((position.y - tilemap.rect.top)) / BlockAssembler.blockSize); 
+            i < Math.floor(((position.y - tilemap.rect.top + size.height)) / BlockAssembler.blockSize); i++){
+            for(let j = Math.floor(((position.x - tilemap.rect.left)) / BlockAssembler.blockSize);
+                 j < Math.floor(((position.x - tilemap.rect.left + size.width)) / BlockAssembler.blockSize);j++ ){     
                     //recursive check for nearby chunks if they are crossed
                     if(!nested){
                         if(i < 0 && this.doesCollideWithTilemap(position, size, chunk.next.top, true)){
@@ -73,13 +79,11 @@ export default class MovementSystem extends System{
                     entityContainer.sprite_components[id].y = position.y;  
                 }
                 //if we are a player we should move the camera
-                //TODO: пихнуть в отдельную систему и камеру и крутилку
+                //moving viewport to the player
                 if(entityContainer.playerControlled_components[id]){
-                    //moving viewport to the player
                     viewport.moveCenter(entityContainer.position_components[id].x,  entityContainer.position_components[id].y);
-                    //rotating player sprite by his moving direction
-                    entityContainer.sprite_components[id].rotation = 1.5708 + Math.atan2(entityContainer.movement_components[id].dirY, entityContainer.movement_components[id].dirX);
                 }
+         
 
                 //if we are outside the chunk we should be stored in another chunk
                 //TODO: будет работать коряво когда сделаю проверку коллизий, т.к. я могу быть половиной спрайта в одном чанке, половиной в другом

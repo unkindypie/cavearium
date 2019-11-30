@@ -28,16 +28,16 @@ class World /*extends PIXI.Container*/ {
         const player = new Entity(this.chunks[0]);
         player.newId();
         player.addComponent(new ECS.components.Sprite(loader.resources['player'].texture))
-            .addComponent(new ECS.components.Position(100, 100))
+            .addComponent(new ECS.components.Position(60 * 6, 60 * 6))
             .addComponent(new ECS.components.Movement())
             .addComponent(new ECS.components.Velocity(0))
             .addComponent(new ECS.components.Acceleration(3, 0))
             .addComponent(new ECS.components.PlayerControlled())
-            .addComponent(new ECS.components.Collision(64 * 4, 64 * 4));
+            .addComponent(new ECS.components.Collision(60 * 6, 60 * 6));
         this.chunks[0].addChild(player.Sprite);
         player.Sprite.anchor.x = player.Sprite.anchor.y = 0.5;
-        player.Sprite.width = player.Sprite.height = 64 * 4;
-        player.Velocity.absoluteVelocity = 64;
+        player.Sprite.width = player.Sprite.height = 60 * 6;
+        player.Velocity.absoluteVelocity = 60;
         player.Movement.dirY = 1;
 
         return;
