@@ -14,6 +14,8 @@ import RenderSystem from './systems/RenderSystem';
 import TilemapRenderSystem from './systems/TilemapRenderSystem';
 import MovementSystem from './systems/MovementSystem';
 import PlayerInputSystem from './systems/PlayerInputSystem';
+import PlayerCameraSystem from './systems/PlayerCameraSystem';
+import ChunkTransitionSystem from './systems/ChunkTransitionSystem'
 //assemblers
 import BlockAssembler from './assemblers/BlockAssembler';
 
@@ -23,7 +25,14 @@ export default class ECS {
     private static entityIDs: number[] = [];
 
     //system object references
-    public static readonly systems: System[] = [new PlayerInputSystem(), new MovementSystem(), new TilemapRenderSystem(), new RenderSystem()];
+    public static readonly systems: System[] = [
+         new PlayerInputSystem(),
+         new MovementSystem(), 
+         new PlayerCameraSystem(), 
+         new ChunkTransitionSystem(),
+         new TilemapRenderSystem(), 
+         new RenderSystem()
+        ];
 
     //component contructor references
     public static readonly components = {

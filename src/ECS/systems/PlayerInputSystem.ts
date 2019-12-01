@@ -2,7 +2,7 @@ import System from "../System";
 import EntityContainer from '../EntityContainer';
 import inputManager from '../../utils/InputManager';
 import viewport from '../../pixi/viewport';
-import { Point } from "pixi.js";
+
 
 export default class PlayerInputSystem extends System {
     public update(entityContainer: EntityContainer): void {

@@ -20,17 +20,32 @@ const app = {
 document.body.appendChild(app.renderer.view);   
 
 export const startGameLoop = (updateCallback: CallableFunction)=>{
-
-    
+    const fps = 30 / 1000;
+    let frameCount = 1;
+    let oldTime = Date.now();
+    let lastDelta = 0;
     const gameLoop = ()=> {
+        frameCount++;
         const curTime = Date.now();
         const delta = curTime - oldTime;
         oldTime = curTime;
-        updateCallback(delta * (60 / 1000)); //updates
+        
+        if(frameCount % 2 === 0){
+            console.log(lastDelta);
+            updateCallback(lastDelta * fps); //updates work on 30fps
+        }
+        else{
+            lastDelta = delta;
+        }
+       
         app.renderer.render(app.stage); //render
+        if(frameCount >= 60){
+            frameCount = 1
+        }
+       
         requestAnimationFrame(gameLoop);
     }
-    let oldTime = Date.now();
+  
     //this will start game loop
     requestAnimationFrame(gameLoop);
 }

@@ -77,52 +77,6 @@ export default class MovementSystem extends System{
                     }  
   
                 }
-                //if we are a player we should move the camera
-                //moving viewport to the player
-                if(entityContainer.playerControlled_components[id]){
-                    viewport.moveCenter(entityContainer.position_components[id].x,  entityContainer.position_components[id].y);
-                }
-         
-
-                //if we are outside the chunk we should be stored in another chunk
-                //TODO: будет работать коряво когда сделаю проверку коллизий, т.к. я могу быть половиной спрайта в одном чанке, половиной в другом
-                //при этом в одном из чанков коллизии обрабатываться не будут
-                if(position.y < entityContainer.rect.y)
-                {   
-                    //changing entity container         
-                    const entity = new Entity(entityContainer, id);
-                    entity.switchContainer((entityContainer as Chunk).next.top)
-                    //changing current pixi.container aka chunk
-                    if(entity.Sprite){
-                        (entityContainer as Chunk).removeChild(entity.Sprite);
-                        (entityContainer as Chunk).next.top.addChild(entity.Sprite);
-                    }
-                } 
-                if(position.y >= entityContainer.rect.bottom){
-                    const entity = new Entity(entityContainer, id);
-                    entity.switchContainer((entityContainer as Chunk).next.down);
-                    if(entity.Sprite){
-                        (entityContainer as Chunk).removeChild(entity.Sprite);
-                        (entityContainer as Chunk).next.down.addChild(entity.Sprite);
-                    }
-                    
-                }
-                if(position.x <= entityContainer.rect.left){
-                    const entity = new Entity(entityContainer, id);
-                    entity.switchContainer((entityContainer as Chunk).next.left)
-                    if(entity.Sprite){
-                        (entityContainer as Chunk).removeChild(entity.Sprite);
-                        (entityContainer as Chunk).next.left.addChild(entity.Sprite);
-                    }
-                }
-                if(position.x >= entityContainer.rect.right){
-                    const entity = new Entity(entityContainer, id);
-                    entity.switchContainer((entityContainer as Chunk).next.right)
-                    if(entity.Sprite){
-                        (entityContainer as Chunk).removeChild(entity.Sprite);
-                        (entityContainer as Chunk).next.right.addChild(entity.Sprite);
-                    }
-                }
             }
             
         }

@@ -37,11 +37,11 @@ class World /*extends PIXI.Container*/ {
         this.chunks[0].addChild(player.Sprite);
         player.Sprite.anchor.x = player.Sprite.anchor.y = 0.5;
         player.Sprite.width = player.Sprite.height = 60 * 6;
-        player.Velocity.absoluteVelocity = 60;
+        player.Velocity.absoluteVelocity = 64;
         player.Movement.dirY = 1;
 
-        console.log('done.')
-        return ;
+        //console.log('done.')
+        //return ;
         for(let i = 0; i < 20; i++){
             const player2 = new Entity(this.chunks[0]);
             player2.newId();
