@@ -2,14 +2,6 @@ import * as PIXI from 'pixi.js'
 //to make pixi do not print his hello message
 PIXI.utils.skipHello();
 
-// const app = new PIXI.Application({
-//     resolution: 1,
-//     width: document.documentElement.clientWidth,
-//     height: document.documentElement.clientHeight,
-//     //запрещаю рендеру начинать рендерить самовольно
-//     autoStart: false    
-// });
-// document.body.appendChild(app.view);
 
 const app = {
     ticker: PIXI.Ticker.shared,
@@ -18,9 +10,8 @@ const app = {
     loader: new PIXI.Loader()
 };
 document.body.appendChild(app.renderer.view);   
-
 export const startGameLoop = (updateCallback: CallableFunction)=>{
-    const fps = 30 / 1000;
+    const fps = 30 / 1000; //30 coz logic runs on frameCount % 2 of the fps
     let frameCount = 1;
     let oldTime = Date.now();
     let lastDelta = 0;
@@ -29,14 +20,14 @@ export const startGameLoop = (updateCallback: CallableFunction)=>{
         const curTime = Date.now();
         const delta = curTime - oldTime;
         oldTime = curTime;
-        
-        if(frameCount % 2 === 0){
-            console.log(lastDelta);
-            updateCallback(lastDelta * fps); //updates work on 30fps
-        }
-        else{
-            lastDelta = delta;
-        }
+     
+        updateCallback(lastDelta);
+        // if(frameCount % 2 === 0){
+        //     updateCallback(lastDelta * fps); //updates work on 30fps
+        // }
+        // else{
+        //     lastDelta = delta;
+        // }
        
         app.renderer.render(app.stage); //render
         if(frameCount >= 60){

@@ -15,18 +15,5 @@ const onLoad = ()=>{
         world.updateWorld(delta);
         viewport.update(delta);
     })
-    
-    // app.ticker.add((delta)=>{
-    //     frameCounter++;
-
-    //     if(frameCounter % 2 === 0){
-    //         frameCounter = 0;
-    //         world.updateWorld(delta);
-    //         viewport.update(delta);
-    //     }
-   
-    //     app.render();
-    // })
-    // app.ticker.start();
 }
 loadResourses(onLoad);

@@ -14,24 +14,37 @@ interface NextChunks {
     down: Chunk
 }
 export default class Chunk extends PIXI.Container implements EntityContainer{
+    
 
     public static readonly chunkSize: number = Tilemap.size;
     public readonly rect: PIXI.Rectangle;
     public child: Tilemap;
     public tilemap: Tilemap;//reference to a child to rename it but still implementing the interface
     public next: NextChunks;
-    //components tables
-    public sprite_components: Sprite[] = [];
-    public position_components: Position[] = [];
-    public collision_components: Collision[] = [];
-    public movement_components: import("../ECS/components/Movement").default[] = [];
-    public acceleration_components: import("../ECS/components/Acceleration").default[] = [];
-    public velocity_components: import("../ECS/components/Velocity").default[] = [];
-    public playerControlled_components: import("../ECS/components/PlayerControlled").default[] = [];
 
+    //components tables
+    public tables: Map<string, any[]> = new Map<string, any[]>();
+
+    public inSimulation = false;
+
+
+    public addComponentTable = (componentName: string)=>{
+        this.tables.set(componentName, []);
+    }
+    public initializeComponentTables = (componentTables: Array<string>)=>{
+        componentTables.forEach((component)=>{
+            this.addComponentTable(component);
+        })    
+    }
+    public component = (componentName: string) => {
+        return this.tables.get(componentName);
+    }
 
     constructor(tilemap: Tilemap){
         super();
+        this.initializeComponentTables(ECS.componentTables);
+
+        this.zIndex = 1;
 
         this.child = tilemap;
         this.tilemap = this.child;
@@ -46,8 +59,8 @@ export default class Chunk extends PIXI.Container implements EntityContainer{
                 if(!this.tilemap.map[y][x]) continue;
                 //if entity in that place has sprite we should draw it
                 block.id = this.tilemap.map[y][x];
-                if(block.Sprite){
-                    this.addChild(block.Sprite);
+                if(block.component('Sprite')){
+                    this.addChild(block.component('Sprite'));
                 }
             }
         }
@@ -57,6 +70,21 @@ export default class Chunk extends PIXI.Container implements EntityContainer{
         graphics.drawRect(this.rect.x, this.rect.y, this.rect.width, this.rect.height);
         graphics.endFill();
         this.addChild(graphics);
+    }
+    public startSimulation() {
+        if(!this.inSimulation){
+            //create all the bodies...
 
+            this.inSimulation = true;
+        }
+    
+    }
+    public stopSimulation() {
+        if(this.inSimulation){
+            //destroy all the bodies...
+
+            this.inSimulation = false;
+        }
+        
     }
 }

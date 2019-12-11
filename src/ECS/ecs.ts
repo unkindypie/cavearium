@@ -9,13 +9,19 @@ import Movement from './components/Movement'
 import Velocity from './components/Velocity'
 import Acceleration from './components/Acceleration'
 import PlayerControlled from './components/PlayerControlled'
+import Shiplike from './components/Shiplike';
+import DynamicBody from './components/DynamicBody';
 //systems
 import RenderSystem from './systems/RenderSystem';
-import TilemapRenderSystem from './systems/TilemapRenderSystem';
-import MovementSystem from './systems/MovementSystem';
+import Box2DSystem from './systems/Box2D';
+//import TilemapRenderSystem from './systems/TilemapRenderSystem';
+//import MovementSystem from './systems/MovementSystem';
 import PlayerInputSystem from './systems/PlayerInputSystem';
-import PlayerCameraSystem from './systems/PlayerCameraSystem';
-import ChunkTransitionSystem from './systems/ChunkTransitionSystem'
+//import PlayerCameraSystem from './systems/PlayerCameraSystem';
+//import ChunkTransitionSystem from './systems/ChunkTransitionSystem'
+//import CollsionHandlingSystem from './systems/CollisionHandlingSystem';
+//import ShiplikeMovementSystem from './systems/ShiplikeMovementSystem';
+
 //assemblers
 import BlockAssembler from './assemblers/BlockAssembler';
 
@@ -27,13 +33,20 @@ export default class ECS {
     //system object references
     public static readonly systems: System[] = [
          new PlayerInputSystem(),
-         new MovementSystem(), 
-         new PlayerCameraSystem(), 
-         new ChunkTransitionSystem(),
-         new TilemapRenderSystem(), 
+         new Box2DSystem(),
+        //  new ShiplikeMovementSystem(),
+        //  new PlayerCameraSystem(), 
+        //  new ChunkTransitionSystem(),
+        //  new TilemapRenderSystem(), 
          new RenderSystem()
         ];
-
+    
+    public static readonly componentTables = [
+        'Sprite',
+        'PlayerControlled',
+        'DynamicBody',
+        'Shiplike'
+    ]
     //component contructor references
     public static readonly components = {
         Position,
@@ -42,7 +55,9 @@ export default class ECS {
         Movement,
         Velocity,
         Acceleration,
-        PlayerControlled  
+        PlayerControlled,
+        Shiplike,
+        DynamicBody  
     };
 
     //current bunch of EntitieContainers that are being updating

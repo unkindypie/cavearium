@@ -1,5 +1,6 @@
 import * as PIXI from 'pixi.js';
 import viewport from '../pixi/viewport';
+import app from '../pixi/pixiapp';
 
 class InputManager {
     public screenPointer: PIXI.Point;
