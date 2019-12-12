@@ -5,6 +5,7 @@ import viewport from '../../pixi/viewport';
 import DynamicBody from '../components/DynamicBody';
 import Shiplike from '../components/Shiplike';
 import * as MH from '../../utils/MathHelper';
+import { Vec2 } from "planck-js";
 
 export default class PlayerInputSystem extends System {
     public update(entityContainer: EntityContainer): void {
@@ -12,19 +13,20 @@ export default class PlayerInputSystem extends System {
 
         for (let id_ in entityContainer.component('PlayerControlled')) {
             const id = parseInt(id_);
-            //inputManager.actions.forward
             if (entityContainer.component('Shiplike')[id] && entityContainer.component('DynamicBody')[id]) {
-                const mouseInPixels = viewport.toWorld(inputManager.screenPointer);
-                const mouse = MH.toWorld(mouseInPixels.x, mouseInPixels.y);
-                console.log('MOUSE:', mouseInPixels);
-                const playerPos = (entityContainer.component('DynamicBody')[id] as DynamicBody).body.getPosition();
-                console.log('BODY:', MH.toScreen(playerPos));
-
-                mouse.sub(playerPos);
-                mouse.normalize();
-                console.log(mouse);
-                (entityContainer.component('Shiplike')[id] as Shiplike).desiredAngleVector = mouse;
-                
+                //векторо между мышью и игроком
+                const mouse = viewport.toWorld(inputManager.screenPointer);
+                const playerPos =  MH.toScreen((entityContainer.component('DynamicBody')[id] as DynamicBody).body.getPosition());
+                const delta = Vec2(mouse.x, mouse.y).sub((Vec2(playerPos.x, playerPos.y)));
+                delta.normalize();
+                delta.y *= -1;
+                (entityContainer.component('Shiplike')[id] as Shiplike).desiredAngleVector = delta;
+                if(inputManager.actions.forward){
+                    (entityContainer.component('Shiplike')[id] as Shiplike).moving = true;
+                }
+                else{
+                    (entityContainer.component('Shiplike')[id] as Shiplike).moving = false;
+                }
             }
         }
     }

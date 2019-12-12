@@ -1,6 +1,7 @@
 import System from "../System";
 import EntityContainer from '../EntityContainer';
 import * as planck from 'planck-js';
+import * as MH from '../../utils/MathHelper';
 
 export default class ShiplikeMovementSystem extends System {
 
@@ -14,7 +15,7 @@ export default class ShiplikeMovementSystem extends System {
         if(body.getAngularVelocity() < -10){
             body.setAngularVelocity(-10);
         }
-
+        //для утсранения эффекта колебания
         const nextAngle = body.getAngle() + body.getAngularVelocity() / 3.5;
         let totalRotation = desiredAngle - nextAngle;
 
@@ -26,13 +27,32 @@ export default class ShiplikeMovementSystem extends System {
         body.applyTorque( totalRotation < 0 ? -15 : 15 );
     }
 
+
+    moveByImulse = (body: planck.Body, moving: boolean)=>{
+        const velocity = body.getLinearVelocity();
+        if(!moving){
+            body.setLinearVelocity(velocity.mul(0.95));  
+            return;
+        };
+
+        let force = MH.b2AngleToVector(body.getAngle());
+        force.mul(14);
+
+        const velChange = force.sub(velocity);
+        const impulse = velChange.mul(body.getMass());
+        body.applyLinearImpulse(impulse, body.getWorldCenter());
+
+    }
+
     public update(container: EntityContainer): void {
         if(container.constructor.name === 'Tilemap') return;
 
         for(let id_ in container.component('Shiplike')){
             const id = parseInt(id_);
-            if(container.component('DymanicBody')[id]){
-                this.rotateByTorque(container.component('Shiplike')[id].desiredAngleVector, container.component('DymanicBody')[id].body);
+            if(container.component('DynamicBody')[id]){
+                console.log(container.component('DynamicBody')[id].body.getPosition());
+                this.rotateByTorque(container.component('Shiplike')[id].desiredAngleVector, container.component('DynamicBody')[id].body);
+                this.moveByImulse(container.component('DynamicBody')[id].body, container.component('Shiplike')[id].moving);
             }
         }
     }

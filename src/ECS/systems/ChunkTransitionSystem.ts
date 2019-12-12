@@ -7,7 +7,8 @@ import Entity from '../Entity';
 export default class ChunkTransitionSystem extends System {
     public update(entityContainer: EntityContainer): void {
         // if(entityContainer.constructor.name === 'Tilemap') return;
-        // for(let id_ in entityContainer.movement_components){
+
+        // for(let id_ in entityContainer.component('DynamicBody')){
         //     const id = parseInt(id_);
         //     const position = entityContainer.position_components[id];
         //     if(!position) continue;

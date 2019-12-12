@@ -2,6 +2,8 @@ import * as PIXI from 'pixi.js'
 import EntityContainer from "../ECS/EntityContainer";
 import ECS from '../ECS/ecs'
 
+import WorldOptions from './WorldOptions';
+
 export default class Tilemap implements EntityContainer {    
     public tables: Map<string, any[]> = new Map<string, any[]>();
 
@@ -9,7 +11,7 @@ export default class Tilemap implements EntityContainer {
     //tile's entity ids
     public map: number[][] = [];
     //tilemap parameters
-    public static readonly size = 64;
+    public static readonly size = WorldOptions.ChunkSize;
     public readonly rect: PIXI.Rectangle;
     //check is that tile has collision components
     public isTileCollidable(x: number, y: number): boolean {

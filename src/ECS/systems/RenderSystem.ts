@@ -15,13 +15,16 @@ export default class RenderSystem extends System {
         const bounds = viewport.getVisibleBounds();
         for(let id_ in container.component('Sprite')){
             const id = parseInt(id_);
-            //moving sprite to body position
             
+            //applying body changes to sprite
             if(container.component('DynamicBody')[id]){
                 const bodyPos = MH.toScreen((container.component('DynamicBody')[id] as DynamicBody).body.getPosition());
                 container.component('Sprite')[id].x = bodyPos.x;
                 container.component('Sprite')[id].y = bodyPos.y;
+                container.component('Sprite')[id].rotation = -container.component('DynamicBody')[id].body.getAngle();
+                
             } 
+            
             container.component('Sprite')[id].visible = container.component('Sprite')[id].x >= bounds.x && container.component('Sprite')[id].x <= bounds.x + bounds.width
             && container.component('Sprite')[id].y >= bounds.y && container.component('Sprite')[id].y <= bounds.y + bounds.height;
         }

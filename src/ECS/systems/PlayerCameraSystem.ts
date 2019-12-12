@@ -8,11 +8,11 @@ export default class PlayerCameraSystem extends System {
     public update(entityContainer: EntityContainer): void {
         if (entityContainer.constructor.name === 'Tilemap') return;
 
-        for (let id_ in entityContainer.component('PlayerConrrolled')) {
+        for (let id_ in entityContainer.component('PlayerControlled')) {
             const id = parseInt(id_);
             if (entityContainer)
-                if (entityContainer.component('DynamicBody')) {
-                    const playerPositon = MH.toScreen((entityContainer.component('DynamicBody') as DynamicBody).body.getPosition());
+                if (entityContainer.component('DynamicBody')[id]) {
+                    const playerPositon = MH.toScreen((entityContainer.component('DynamicBody')[id] as DynamicBody).body.getPosition());
 
                     //moving viewport to the player
                     viewport.moveCenter(playerPositon.x, playerPositon.y);

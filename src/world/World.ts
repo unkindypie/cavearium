@@ -10,7 +10,7 @@ import * as WorleyNoise from 'worley-noise'
 import * as planck from 'planck-js';
 import * as MH from '../utils/MathHelper';
 import app from '../pixi/pixiapp';
-
+import WorldOptions from './WorldOptions';
 
 export const b2World = planck.World({
     //gravity: planck.Vec2(0, -9)
@@ -128,7 +128,7 @@ class World /*extends PIXI.Container*/ {
         let asteroid_xoff;
         let asteroid_yoff = y * this.asteroidNoiseIncrement;
 
-        const tilemap = new Tilemap(x * ECS.assemblers.BlockAssembler.blockSize, y * ECS.assemblers.BlockAssembler.blockSize, ECS.assemblers.BlockAssembler.blockSize * Tilemap.size, ECS.assemblers.BlockAssembler.blockSize * Tilemap.size);
+        const tilemap = new Tilemap(x * WorldOptions.pTileSize, y * WorldOptions.pTileSize, WorldOptions.pTileSize * Tilemap.size,  WorldOptions.pTileSize * Tilemap.size);
         const block = new Entity(tilemap);
 
         for (let by = 0; by < Chunk.chunkSize; by++) {

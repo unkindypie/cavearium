@@ -2,8 +2,6 @@ import * as PIXI from 'pixi.js'
 import viewport from '../pixi/viewport'
 import ECS from '../ECS/ecs'
 import Sprite from '../ECS/components/Sprite'
-import Position from '../ECS/components/Position'
-import Collision from '../ECS/components/Collision'
 import Entity from '../ECS/Entity';
 import EntityContainer from '../ECS/EntityContainer';
 import Tilemap from './Tilemap'

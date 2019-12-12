@@ -2,12 +2,7 @@ import * as PIXI from 'pixi.js'
 import System from './System';
 import EntityContainer from './EntityContainer';
 //components
-import Collision from './components/Collision';
 import Sprite from './components/Sprite';
-import Position from './components/Position';
-import Movement from './components/Movement'
-import Velocity from './components/Velocity'
-import Acceleration from './components/Acceleration'
 import PlayerControlled from './components/PlayerControlled'
 import Shiplike from './components/Shiplike';
 import DynamicBody from './components/DynamicBody';
@@ -15,12 +10,10 @@ import DynamicBody from './components/DynamicBody';
 import RenderSystem from './systems/RenderSystem';
 import Box2DSystem from './systems/Box2D';
 //import TilemapRenderSystem from './systems/TilemapRenderSystem';
-//import MovementSystem from './systems/MovementSystem';
 import PlayerInputSystem from './systems/PlayerInputSystem';
-//import PlayerCameraSystem from './systems/PlayerCameraSystem';
-//import ChunkTransitionSystem from './systems/ChunkTransitionSystem'
-//import CollsionHandlingSystem from './systems/CollisionHandlingSystem';
-//import ShiplikeMovementSystem from './systems/ShiplikeMovementSystem';
+import PlayerCameraSystem from './systems/PlayerCameraSystem';
+import ChunkTransitionSystem from './systems/ChunkTransitionSystem'
+import ShiplikeMovementSystem from './systems/ShiplikeMovementSystem';
 
 //assemblers
 import BlockAssembler from './assemblers/BlockAssembler';
@@ -33,10 +26,10 @@ export default class ECS {
     //system object references
     public static readonly systems: System[] = [
          new PlayerInputSystem(),
+         new ShiplikeMovementSystem(),
          new Box2DSystem(),
-        //  new ShiplikeMovementSystem(),
-        //  new PlayerCameraSystem(), 
-        //  new ChunkTransitionSystem(),
+         new PlayerCameraSystem(), 
+         new ChunkTransitionSystem(),
         //  new TilemapRenderSystem(), 
          new RenderSystem()
         ];
@@ -49,12 +42,7 @@ export default class ECS {
     ]
     //component contructor references
     public static readonly components = {
-        Position,
-        Collision,
         Sprite,
-        Movement,
-        Velocity,
-        Acceleration,
         PlayerControlled,
         Shiplike,
         DynamicBody  

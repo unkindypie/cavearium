@@ -3,12 +3,6 @@ import ECS from "./ecs";
 import EntityContainer from './EntityContainer'
 
 //components
-import Collision from './components/Collision';
-import Sprite from './components/Sprite';
-import Position from './components/Position';
-import Movement from './components/Movement';
-import Velocity from './components/Velocity';
-import Acceleration from './components/Acceleration';
 import PlayerControlled from './components/PlayerControlled';
 import DymanicBody from './components/DynamicBody';
 import Shiplike from './components/Shiplike';
