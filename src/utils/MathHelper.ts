@@ -2,7 +2,7 @@ import { Vec2 } from 'planck-js';
 
 //value for scaling pixels to box2d metric system
 export let scalar = 0.016; //32 pixels ~= 0.5 meters
-let pHeight = 920; 
+export let pHeight = 920; 
 
 export const setScreenHeight = (height: number)=>{
     pHeight = height;
@@ -12,7 +12,7 @@ export const xToWorld = (xp: number): number=>{
     return xp * scalar;
 }
 export const xToScreen = (xm: number): number =>{
-    return xm / 0.02;
+    return xm / scalar;
 }
 
 export const yToWorld = (yp: number): number =>{

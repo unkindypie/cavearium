@@ -14,7 +14,12 @@ import WorldOptions from './WorldOptions';
 
 export const b2World = planck.World({
     //gravity: planck.Vec2(0, -9)
+
 });
+
+b2World.on('remove-body', ()=>{
+    console.log('b2: body destroyed');
+})
 
 class World /*extends PIXI.Container*/ {
     public seed: number;
@@ -39,8 +44,8 @@ class World /*extends PIXI.Container*/ {
             .addComponent(new ECS.components.PlayerControlled())
             .addComponent(new ECS.components.DynamicBody(
                 new planck.Box(
-                    MH.xToWorld(60 * 6),
-                    MH.xToWorld(60 * 6)
+                    MH.xToWorld((60 * 6)/2),
+                    MH.xToWorld((60 * 6)/2)
                 ),
                 MH.xToWorld((60 * 6) * 2),
                 MH.yToWorld((60 * 6) * 2)
@@ -50,50 +55,34 @@ class World /*extends PIXI.Container*/ {
         this.chunks[0].addChild(player.component('Sprite'));
         player.component('Sprite').anchor.x = player.component('Sprite').anchor.y = 0.5;
         player.component('Sprite').zIndex = 5;
-
         player.component('Sprite').width = player.component('Sprite').height = 60 * 6;
-
         player.component('DynamicBody').createBody();
+        player.component('Shiplike').maxVelocity = 30;
 
+        const player2 = new Entity(this.chunks[0]);
+        player2.newId();
+        player2.addComponent(new ECS.components.Sprite(loader.resources['player'].texture))
+            .addComponent(new ECS.components.DynamicBody(
+                new planck.Box(
+                    MH.xToWorld((60 * 6)/2),
+                    MH.xToWorld((60 * 6)/2)
+                ),
+                MH.xToWorld((60 * 6) * 3),
+                MH.yToWorld((60 * 6) * 4)
+            ))
+            .addComponent(new ECS.components.Shiplike())
 
-        // const player2 = new Entity(this.chunks[0]);
-        // player2.newId();
-        // player2.addComponent(new ECS.components.Sprite(loader.resources['player'].texture))
-        //     .addComponent(new ECS.components.DynamicBody(
-        //         new planck.Box(
-        //             MH.xToWorld(60 * 6 + 60),
-        //             MH.xToWorld(60 * 6)
-        //         ),
-        //         MH.xToWorld((60 * 6) * 2 + 60),
-        //         MH.yToWorld((60 * 6) * 2 + 60)
-        //     ))
-
-        // this.chunks[0].addChild(player2.component('Sprite'));
-        // player2.component('Sprite').anchor.x = player2.component('Sprite').anchor.y = 0.5;
-        // player2.component('Sprite').zIndex = 5;
-
-        // player2.component('Sprite').width = player2.component('Sprite').height = 60 * 6;
-
-        // player2.component('DynamicBody').createBody();
-
-
+        this.chunks[0].addChild(player2.component('Sprite'));
+        player2.component('Sprite').anchor.x = player2.component('Sprite').anchor.y = 0.5;
+        player2.component('Sprite').zIndex = 5;
+        player2.component('Sprite').width = player2.component('Sprite').height = 60 * 6;
+        player2.component('Shiplike').desiredAngleVector = planck.Vec2(1, -0.5);
+        player2.component('Shiplike').moving = true;
+        
+        player2.component('DynamicBody').createBody();
+        
 
         console.log('done.')
-        // for(let i = 0; i < 20; i++){
-        //     const player2 = new Entity(this.chunks[0]);
-        //     player2.newId();
-        //     player2.addComponent(new ECS.components.Sprite(loader.resources['player'].texture))
-        //         .addComponent(new ECS.components.Position(200 + 64 * 3 * i, 200))
-        //         .addComponent(new ECS.components.Movement())
-        //         .addComponent(new ECS.components.Velocity(7))
-        //         .addComponent(new ECS.components.Acceleration(3, 0))
-        //         .addComponent(new ECS.components.Collision(64 * 4, 64 * 4));
-        //     this.chunks[0].addChild(player2.Sprite);
-        //     player2.Sprite.anchor.x = player2.Sprite.anchor.y = 0.5;
-        //     player2.Sprite.width = player2.Sprite.height = 64 * 3;
-        //     player2.Velocity.absoluteVelocity = 10;
-        //     player2.Movement.dirY = 1;
-        // }
     }
     private generateWorld() {
         this.seed = Math.random() * 10000;
@@ -128,7 +117,9 @@ class World /*extends PIXI.Container*/ {
         let asteroid_xoff;
         let asteroid_yoff = y * this.asteroidNoiseIncrement;
 
-        const tilemap = new Tilemap(x * WorldOptions.pTileSize, y * WorldOptions.pTileSize, WorldOptions.pTileSize * Tilemap.size,  WorldOptions.pTileSize * Tilemap.size);
+        const mRect = new PIXI.Rectangle(x * WorldOptions.mTileSize, MH.yToWorld(y * WorldOptions.pTileSize), WorldOptions.mTileSize * Tilemap.size,  WorldOptions.mTileSize * Tilemap.size);
+        const pRect = new PIXI.Rectangle(x * WorldOptions.pTileSize, y * WorldOptions.pTileSize, WorldOptions.pTileSize * Tilemap.size,  WorldOptions.pTileSize * Tilemap.size);
+        const tilemap = new Tilemap(mRect, pRect);
         const block = new Entity(tilemap);
 
         for (let by = 0; by < Chunk.chunkSize; by++) {
@@ -172,10 +163,11 @@ class World /*extends PIXI.Container*/ {
 
     public updateWorld(delta: number) {
         const bounds = viewport.getVisibleBounds();
+
         for (let i = 0; i < this.chunks.length; i++) {
 
-            if (this.chunks[i].visible = !(this.chunks[i].rect.right <= bounds.x || this.chunks[i].rect.left >= bounds.x + bounds.width ||
-                this.chunks[i].rect.bottom <= bounds.y || this.chunks[i].rect.top >= bounds.y + bounds.height)) {
+            if (this.chunks[i].visible = !(this.chunks[i].pRect.right <= bounds.x || this.chunks[i].pRect.left >= bounds.x + bounds.width ||
+                this.chunks[i].pRect.bottom <= bounds.y || this.chunks[i].pRect.top >= bounds.y + bounds.height)) {
                 this.chunks[i].startSimulation();
                 ECS.updateSystems(this.chunks[i], delta);
             }
@@ -183,6 +175,7 @@ class World /*extends PIXI.Container*/ {
                 this.chunks[i].stopSimulation();
             }
         }
+        ECS.Physics.update(delta);
     }
 }
 

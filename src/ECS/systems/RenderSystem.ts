@@ -18,7 +18,9 @@ export default class RenderSystem extends System {
             
             //applying body changes to sprite
             if(container.component('DynamicBody')[id]){
+                //console.log('PH:', (container.component('DynamicBody')[id] as DynamicBody).body.getPosition());
                 const bodyPos = MH.toScreen((container.component('DynamicBody')[id] as DynamicBody).body.getPosition());
+                //console.log('S:', bodyPos);
                 container.component('Sprite')[id].x = bodyPos.x;
                 container.component('Sprite')[id].y = bodyPos.y;
                 container.component('Sprite')[id].rotation = -container.component('DynamicBody')[id].body.getAngle();

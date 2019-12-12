@@ -2,6 +2,7 @@ import System from "../System";
 import EntityContainer from '../EntityContainer';
 import * as planck from 'planck-js';
 import * as MH from '../../utils/MathHelper';
+import Shiplike from '../components/Shiplike';
 
 export default class ShiplikeMovementSystem extends System {
 
@@ -16,7 +17,7 @@ export default class ShiplikeMovementSystem extends System {
             body.setAngularVelocity(-10);
         }
         //для утсранения эффекта колебания
-        const nextAngle = body.getAngle() + body.getAngularVelocity() / 3.5;
+        const nextAngle = body.getAngle() + body.getAngularVelocity() / 4;//3.5;
         let totalRotation = desiredAngle - nextAngle;
 
         //поиск кратчайшего пути поворота к нужному углу (т.к. можно вертеться в другую сторону и это будет дольше)
@@ -28,15 +29,15 @@ export default class ShiplikeMovementSystem extends System {
     }
 
 
-    moveByImulse = (body: planck.Body, moving: boolean)=>{
+    moveByImulse = (body: planck.Body, shiplike: Shiplike)=>{
         const velocity = body.getLinearVelocity();
-        if(!moving){
+        if(!shiplike.moving){
             body.setLinearVelocity(velocity.mul(0.95));  
             return;
         };
 
         let force = MH.b2AngleToVector(body.getAngle());
-        force.mul(14);
+        force.mul(shiplike.maxVelocity);
 
         const velChange = force.sub(velocity);
         const impulse = velChange.mul(body.getMass());
@@ -50,9 +51,8 @@ export default class ShiplikeMovementSystem extends System {
         for(let id_ in container.component('Shiplike')){
             const id = parseInt(id_);
             if(container.component('DynamicBody')[id]){
-                console.log(container.component('DynamicBody')[id].body.getPosition());
                 this.rotateByTorque(container.component('Shiplike')[id].desiredAngleVector, container.component('DynamicBody')[id].body);
-                this.moveByImulse(container.component('DynamicBody')[id].body, container.component('Shiplike')[id].moving);
+                this.moveByImulse(container.component('DynamicBody')[id].body, container.component('Shiplike')[id]);
             }
         }
     }

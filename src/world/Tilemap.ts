@@ -12,7 +12,8 @@ export default class Tilemap implements EntityContainer {
     public map: number[][] = [];
     //tilemap parameters
     public static readonly size = WorldOptions.ChunkSize;
-    public readonly rect: PIXI.Rectangle;
+    public readonly pRect: PIXI.Rectangle;
+    public readonly mRect: PIXI.Rectangle;
     //check is that tile has collision components
     public isTileCollidable(x: number, y: number): boolean {
         return !!this.tables.get('Collision')[this.map[y][x]];
@@ -31,8 +32,9 @@ export default class Tilemap implements EntityContainer {
     }
 
     //(values in pixels)
-    constructor(x: number, y: number, width: number, height: number){
-        this.rect = new PIXI.Rectangle(x, y, width, height);
+    constructor(mRect: PIXI.Rectangle, pRect: PIXI.Rectangle){
+        this.pRect = pRect;
+        this.mRect = mRect;
         this.initializeComponentTables(ECS.componentTables);
     }
 }

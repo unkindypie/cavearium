@@ -8,7 +8,7 @@ export default abstract class Body implements IComponent {
     public shape: planck.Shape;
     public position: planck.Vec2;
     public angle: number;
-
+    public created: boolean = false;
     public abstract destroyBody(): void;
     public abstract createBody(): void;
     

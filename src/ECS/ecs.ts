@@ -22,18 +22,31 @@ export default class ECS {
     //for generating unique id
     private static iter: number = 0;
     private static entityIDs: number[] = [];
+    public static Physics: Box2DSystem = new Box2DSystem()
 
-    //system object references
+    //System object references
+
+    // //systems that should run before Box2D.step()
+    // public static prePhysicsSystems: System[] = [
+    //     new PlayerInputSystem(),
+    //     new ShiplikeMovementSystem()
+    // ]
+    // //systems that should run after Box2D.step()
+    // public static readonly postPhysicsSystems: System[] = [
+    //      new PlayerCameraSystem(), 
+    //      new ChunkTransitionSystem(),
+    //     //  new TilemapRenderSystem(), 
+    //      new RenderSystem()
+    //     ];
     public static readonly systems: System[] = [
-         new PlayerInputSystem(),
-         new ShiplikeMovementSystem(),
-         new Box2DSystem(),
-         new PlayerCameraSystem(), 
-         new ChunkTransitionSystem(),
+        new PlayerInputSystem(),
+        new ShiplikeMovementSystem(),
+        new PlayerCameraSystem(),
         //  new TilemapRenderSystem(), 
-         new RenderSystem()
-        ];
-    
+        new RenderSystem(),
+        new ChunkTransitionSystem() //to fix strange glitch next render after transition shuld be called adter box2d.step() so this is in the end
+    ];
+
     public static readonly componentTables = [
         'Sprite',
         'PlayerControlled',
@@ -45,7 +58,7 @@ export default class ECS {
         Sprite,
         PlayerControlled,
         Shiplike,
-        DynamicBody  
+        DynamicBody
     };
 
     //current bunch of EntitieContainers that are being updating
@@ -56,28 +69,38 @@ export default class ECS {
         BlockAssembler
     }
 
-    private constructor(){}
+    private constructor() { }
 
     public static genareteEntityId(): number {
         let id;
         ECS.iter++;
         return ECS.iter;
-        do{
-            id = (Math.random()*10000 + Date.now()/100000)^0;
+        do {
+            id = (Math.random() * 10000 + Date.now() / 100000) ^ 0;
         }
-        while(ECS.entityIDs.indexOf(id) != -1)
-        
+        while (ECS.entityIDs.indexOf(id) != -1)
+
         ECS.entityIDs.push(id);
 
         return id;
     }
-    public static updateSystems(container: EntityContainer, delta: number){
-        for(let i = 0; i < this.systems.length; i++){
+    public static updateSystems(container: EntityContainer, delta: number) {
+        
+        for (let i = 0; i < this.systems.length; i++) {
             this.systems[i].update(container, delta);
         }
+        // //updating prePhysicsSystems for every chunk
+        // for (let i = 0; i < this.prePhysicsSystems.length; i++) {
+        //     this.prePhysicsSystems[i].update(container, delta);
+        // }
+
+        // //updating physics
+        // ECS.Physics.update(delta);
+
+        // //updating postPhysicsSystems for every chunk
+        // for (let i = 0; i < this.postPhysicsSystems.length; i++) {
+        //     this.postPhysicsSystems[i].update(container, delta);
+        // }
     }
-    
+
 }
-
-//export default ECS;
-

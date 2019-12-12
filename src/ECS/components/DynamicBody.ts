@@ -29,15 +29,20 @@ export default class DynamicBody extends Body {
     }
 
     public destroyBody(): void {
+        if(!this.created) return;
+        console.log('Body is destroyed.')
         this.position = this.body.getPosition();
         this.angle = this.body.getAngle();
         this.linearVelocity = this.body.getLinearVelocity();
         this.angularVelocity = this.body.getAngularVelocity();
 
         b2World.destroyBody(this.body);
+        this.created = false;
     } 
 
     public createBody(): void {
+        if(this.created) return;
+        console.log('Body is created.')
         this.body = b2World.createDynamicBody({
             position: this.position,
             angle: this.angle,
@@ -46,6 +51,7 @@ export default class DynamicBody extends Body {
         })
         this.body.createFixture(this.shape, this.fixtureOptions);
         this.body.setMassData(this.massData);
+        this.created = true;
     }
 
     

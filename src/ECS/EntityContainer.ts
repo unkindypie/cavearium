@@ -9,7 +9,8 @@ export default interface EntityContainer {
      tables: Map<string, any[]>;
      
      child: EntityContainer;
-     rect: PIXI.Rectangle;
+     pRect: PIXI.Rectangle;
+     mRect: PIXI.Rectangle;
      
      initializeComponentTables: Function;
      addComponentTable: Function;
