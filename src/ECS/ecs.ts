@@ -6,10 +6,11 @@ import Sprite from './components/Sprite';
 import PlayerControlled from './components/PlayerControlled'
 import Shiplike from './components/Shiplike';
 import DynamicBody from './components/DynamicBody';
+import StaticBody from './components/StaticBody';
 //systems
 import RenderSystem from './systems/RenderSystem';
 import Box2DSystem from './systems/Box2D';
-//import TilemapRenderSystem from './systems/TilemapRenderSystem';
+import TilemapRenderSystem from './systems/TilemapRenderSystem';
 import PlayerInputSystem from './systems/PlayerInputSystem';
 import PlayerCameraSystem from './systems/PlayerCameraSystem';
 import ChunkTransitionSystem from './systems/ChunkTransitionSystem'
@@ -25,24 +26,11 @@ export default class ECS {
     public static Physics: Box2DSystem = new Box2DSystem()
 
     //System object references
-
-    // //systems that should run before Box2D.step()
-    // public static prePhysicsSystems: System[] = [
-    //     new PlayerInputSystem(),
-    //     new ShiplikeMovementSystem()
-    // ]
-    // //systems that should run after Box2D.step()
-    // public static readonly postPhysicsSystems: System[] = [
-    //      new PlayerCameraSystem(), 
-    //      new ChunkTransitionSystem(),
-    //     //  new TilemapRenderSystem(), 
-    //      new RenderSystem()
-    //     ];
     public static readonly systems: System[] = [
         new PlayerInputSystem(),
         new ShiplikeMovementSystem(),
         new PlayerCameraSystem(),
-        //  new TilemapRenderSystem(), 
+        new TilemapRenderSystem(), 
         new RenderSystem(),
         new ChunkTransitionSystem() //to fix strange glitch next render after transition shuld be called adter box2d.step() so this is in the end
     ];
@@ -51,6 +39,7 @@ export default class ECS {
         'Sprite',
         'PlayerControlled',
         'DynamicBody',
+        'StaticBody',
         'Shiplike'
     ]
     //component contructor references
@@ -58,7 +47,8 @@ export default class ECS {
         Sprite,
         PlayerControlled,
         Shiplike,
-        DynamicBody
+        DynamicBody,
+        StaticBody
     };
 
     //current bunch of EntitieContainers that are being updating

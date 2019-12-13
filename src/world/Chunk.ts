@@ -78,7 +78,7 @@ export default class Chunk extends PIXI.Container implements EntityContainer {
                 const id = parseInt(id_);
                 this.component('DynamicBody')[id].createBody();
             }
-
+            this.child.startSimulation();
             this.inSimulation = true;
         }
 
@@ -89,7 +89,7 @@ export default class Chunk extends PIXI.Container implements EntityContainer {
                 const id = parseInt(id_);
                 this.component('DynamicBody')[id].destroyBody();
             }
-
+            this.child.stopSimulation();
             this.inSimulation = false;
         }
 

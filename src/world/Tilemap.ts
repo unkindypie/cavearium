@@ -14,6 +14,7 @@ export default class Tilemap implements EntityContainer {
     public static readonly size = WorldOptions.ChunkSize;
     public readonly pRect: PIXI.Rectangle;
     public readonly mRect: PIXI.Rectangle;
+    public inSimulation = false;
     //check is that tile has collision components
     public isTileCollidable(x: number, y: number): boolean {
         return !!this.tables.get('Collision')[this.map[y][x]];
@@ -31,7 +32,28 @@ export default class Tilemap implements EntityContainer {
         return this.tables.get(componentName);
     }
 
-    //(values in pixels)
+    public startSimulation() {
+        if (!this.inSimulation) {
+            for(let id_ in this.component('StaticBody')){
+                const id = parseInt(id_);
+                this.component('StaticBody')[id].createBody();
+            }
+            this.inSimulation = true;
+        }
+
+    }
+    public stopSimulation() {
+        if (this.inSimulation) {
+            for(let id_ in this.component('StaticBody')){
+                const id = parseInt(id_);
+                this.component('StaticBody')[id].destroyBody();
+            }
+
+            this.inSimulation = false;
+        }
+
+    }
+
     constructor(mRect: PIXI.Rectangle, pRect: PIXI.Rectangle){
         this.pRect = pRect;
         this.mRect = mRect;

@@ -17,9 +17,6 @@ export const b2World = planck.World({
 
 });
 
-b2World.on('remove-body', ()=>{
-    console.log('b2: body destroyed');
-})
 
 class World /*extends PIXI.Container*/ {
     public seed: number;
@@ -44,8 +41,8 @@ class World /*extends PIXI.Container*/ {
             .addComponent(new ECS.components.PlayerControlled())
             .addComponent(new ECS.components.DynamicBody(
                 new planck.Box(
-                    MH.xToWorld((60 * 6)/2),
-                    MH.xToWorld((60 * 6)/2)
+                    MH.xToWorld(60 * 3),
+                    MH.xToWorld(60 * 3)
                 ),
                 MH.xToWorld((60 * 6) * 2),
                 MH.yToWorld((60 * 6) * 2)
@@ -135,18 +132,18 @@ class World /*extends PIXI.Container*/ {
                 const worleyNoiseValue = worleyNoise.getEuclidean({ x: (x + bx) / this.tilesWidth, y: (y + by) / this.tilesHeight }, 1);
 
                 if (worleyNoiseValue / Math.abs(asteroidNoiseValue) < 0.2 && caveNoiseValue < (worleyNoiseValue / Math.abs(asteroidNoiseValue)) * 4) {
-                    // block.newId(); //changing id
-                    // //assembling block entity in tilemap
-                    // ECS.assemblers.BlockAssembler.Assemble(block, 'ground', (bx + x) * ECS.assemblers.BlockAssembler.blockSize, (by + y) * ECS.assemblers.BlockAssembler.blockSize);
-                    // tilemap.map[by][bx] = block.id; //saving it's id in map matrix
+                    block.newId(); //changing id
+                    //assembling block entity in tilemap
+                    ECS.assemblers.BlockAssembler.Assemble(block, 'ground', (bx + x) * WorldOptions.mTileSize, MH.yToWorld((by + y) * WorldOptions.pTileSize));
+                    tilemap.map[by][bx] = block.id; //saving it's id in map matrix
                 }
-                //broders
+                //borders
                 else if ((x === 0 && bx == 0) || (x === this.tilesWidth - 1 && bx == Chunk.chunkSize - 1)
                     || (y === 0 && by == 0) || (y === this.tilesHeight - 1 && by == Chunk.chunkSize - 1)) {
-                    // block.newId(); //changing id
-                    // //assembling block entity in tilemap
-                    // ECS.assemblers.BlockAssembler.Assemble(block, 'ground', (bx + x) * ECS.assemblers.BlockAssembler.blockSize, (by + y) * ECS.assemblers.BlockAssembler.blockSize);
-                    // tilemap.map[by][bx] = block.id; //saving it's id in map matrix
+                        block.newId(); //changing id
+                        //assembling block entity in tilemap
+                        ECS.assemblers.BlockAssembler.Assemble(block, 'ground', (bx + x) * WorldOptions.mTileSize, MH.yToWorld((by + y) * WorldOptions.pTileSize));
+                        tilemap.map[by][bx] = block.id; //saving it's id in map matrix
                 }
                 //empty space
                 else {
@@ -168,6 +165,7 @@ class World /*extends PIXI.Container*/ {
 
             if (this.chunks[i].visible = !(this.chunks[i].pRect.right <= bounds.x || this.chunks[i].pRect.left >= bounds.x + bounds.width ||
                 this.chunks[i].pRect.bottom <= bounds.y || this.chunks[i].pRect.top >= bounds.y + bounds.height)) {
+
                 this.chunks[i].startSimulation();
                 ECS.updateSystems(this.chunks[i], delta);
             }

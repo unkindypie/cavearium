@@ -11,8 +11,11 @@ export default interface EntityContainer {
      child: EntityContainer;
      pRect: PIXI.Rectangle;
      mRect: PIXI.Rectangle;
+     inSimulation: boolean;
      
      initializeComponentTables: Function;
      addComponentTable: Function;
      component: Function;
+     startSimulation: Function;
+     stopSimulation: Function;
 }

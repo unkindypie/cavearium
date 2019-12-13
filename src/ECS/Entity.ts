@@ -35,51 +35,28 @@ export default class Entity {
             }
             delete table[this.id];
         })
+        //engine needs it for situation where some entity has transit to not simulated chunk and we need to stop
+        //simulation for that entity
+        if(!newContainer.inSimulation){
+            if(newContainer.component('DynamicBody')){
+                for(let id_ in newContainer.component('DynamicBody')){
+                    const id = parseInt(id_);
+                    newContainer.component('DynamicBody')[id].destroyBody();
+                }
+            }
+            if(newContainer.component('StaticBody')){
+                for(let id_ in newContainer.component('StaticBody')){
+                    const id = parseInt(id_);
+                    newContainer.component('StaticBody')[id].destroyBody();
+                }
+            }
+            
+        }
         //this.removeEntity();
         this.entityContainer = newContainer;
     }
     public addComponent(component: IComponent) {
         this.entityContainer.component(component.constructor.name)[this.id] = component;
-        
-        // switch (component.constructor.name) {
-
-        //     case 'DymanicBody':
-        //         this.entityContainer.dynamicBody_components[this.id] = component as DymanicBody;
-        //         break;
-        //     case 'Shiplike':
-        //         this.entityContainer.shiplike_components[this.id] = component as Shiplike;
-        //         break;
-        //     case 'Position':
-        //         if (this.entityContainer.sprite_components[this.id]) {
-        //             this.entityContainer.sprite_components[this.id].x = (component as Position).x;
-        //             this.entityContainer.sprite_components[this.id].y = (component as Position).y;
-        //         }
-        //         this.entityContainer.position_components[this.id] = component as Position;
-        //         break;
-        //     case 'Sprite':
-        //         this.entityContainer.sprite_components[this.id] = component as Sprite;
-        //         if (this.entityContainer.position_components[this.id]) {
-        //             this.entityContainer.sprite_components[this.id].x = this.entityContainer.position_components[this.id].x;
-        //             this.entityContainer.sprite_components[this.id].y = this.entityContainer.position_components[this.id].y;
-        //         }
-        //         break;
-        //     case 'Collision':
-        //         this.entityContainer.collision_components[this.id] = component as Collision;
-        //         break;
-        //     case 'Movement':
-        //         this.entityContainer.movement_components[this.id] = component as Movement;
-        //         break;
-        //     case 'Velocity':
-        //         this.entityContainer.velocity_components[this.id] = component as Velocity;
-        //         break;
-        //     case 'Acceleration':
-        //         this.entityContainer.acceleration_components[this.id] = component as Acceleration;
-        //         break;
-        //     case 'PlayerControlled':
-        //         this.entityContainer.playerControlled_components[this.id] = component as PlayerControlled;
-        //         break;
-
-        // }
         return this;
     }
     public removeComponent(component: IComponent) {

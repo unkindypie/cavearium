@@ -37,6 +37,7 @@ export default class DynamicBody extends Body {
         this.angularVelocity = this.body.getAngularVelocity();
 
         b2World.destroyBody(this.body);
+        this.body = null;
         this.created = false;
     } 
 
