@@ -33,6 +33,7 @@ export default class StaticBody extends Body {
                 angle: this.angle,
                 type: 'static'
             })
+        
             this.body.createFixture(this.shape, this.fixtureOptions);
             this.created = true;
         }
