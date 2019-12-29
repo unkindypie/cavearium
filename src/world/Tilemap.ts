@@ -34,9 +34,10 @@ export default class Tilemap implements EntityContainer {
 
     public startSimulation() {
         if (!this.inSimulation) {
-            for(let id_ in this.component('StaticBody')){
+            for(let id_ in this.component('CompoundStaticBody')){
                 const id = parseInt(id_);
-                this.component('StaticBody')[id].createBody();
+                //this.component('StaticBody')[id].createBody();
+                this.component('CompoundStaticBody')[id].createBody();
             }
             this.inSimulation = true;
         }
@@ -44,9 +45,12 @@ export default class Tilemap implements EntityContainer {
     }
     public stopSimulation() {
         if (this.inSimulation) {
-            for(let id_ in this.component('StaticBody')){
+            
+            for(let id_ in this.component('CompoundStaticBody')){
                 const id = parseInt(id_);
-                this.component('StaticBody')[id].destroyBody();
+                //this.component('StaticBody')[id].destroyBody();
+                
+                this.component('CompoundStaticBody')[id].destroyBody();
             }
 
             this.inSimulation = false;

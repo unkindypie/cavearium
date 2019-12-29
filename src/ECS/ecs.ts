@@ -7,6 +7,7 @@ import PlayerControlled from './components/PlayerControlled'
 import Shiplike from './components/Shiplike';
 import DynamicBody from './components/DynamicBody';
 import StaticBody from './components/StaticBody';
+import CompoundStaticBody from './components/CompoundStaticBody';
 //systems
 import RenderSystem from './systems/RenderSystem';
 import Box2DSystem from './systems/Box2D';
@@ -40,7 +41,8 @@ export default class ECS {
         'PlayerControlled',
         'DynamicBody',
         'StaticBody',
-        'Shiplike'
+        'Shiplike',
+        'CompoundStaticBody'
     ]
     //component contructor references
     public static readonly components = {
@@ -48,7 +50,8 @@ export default class ECS {
         PlayerControlled,
         Shiplike,
         DynamicBody,
-        StaticBody
+        StaticBody,
+        CompoundStaticBody
     };
 
     //current bunch of EntitieContainers that are being updating

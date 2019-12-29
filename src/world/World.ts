@@ -44,8 +44,8 @@ class World /*extends PIXI.Container*/ {
                     MH.xToWorld(60 * 3),
                     MH.xToWorld(60 * 3)
                 ),
-                MH.xToWorld((60 * 6) * 2),
-                MH.yToWorld((60 * 6) * 2)
+                MH.xToWorld((60 * 6) * 3),
+                MH.yToWorld((60 * 6) * 3)
             ))
             .addComponent(new ECS.components.Shiplike())
 
@@ -56,27 +56,27 @@ class World /*extends PIXI.Container*/ {
         player.component('DynamicBody').createBody();
         player.component('Shiplike').maxVelocity = 30;
 
-        const player2 = new Entity(this.chunks[0]);
-        player2.newId();
-        player2.addComponent(new ECS.components.Sprite(loader.resources['player'].texture))
-            .addComponent(new ECS.components.DynamicBody(
-                new planck.Box(
-                    MH.xToWorld((60 * 6)/2),
-                    MH.xToWorld((60 * 6)/2)
-                ),
-                MH.xToWorld((60 * 6) * 3),
-                MH.yToWorld((60 * 6) * 4)
-            ))
-            .addComponent(new ECS.components.Shiplike())
+        // const player2 = new Entity(this.chunks[0]);
+        // player2.newId();
+        // player2.addComponent(new ECS.components.Sprite(loader.resources['player'].texture))
+        //     .addComponent(new ECS.components.DynamicBody(
+        //         new planck.Box(
+        //             MH.xToWorld((60 * 6)/2),
+        //             MH.xToWorld((60 * 6)/2)
+        //         ),
+        //         MH.xToWorld((60 * 6) * 3),
+        //         MH.yToWorld((60 * 6) * 4)
+        //     ))
+        //     .addComponent(new ECS.components.Shiplike())
 
-        this.chunks[0].addChild(player2.component('Sprite'));
-        player2.component('Sprite').anchor.x = player2.component('Sprite').anchor.y = 0.5;
-        player2.component('Sprite').zIndex = 5;
-        player2.component('Sprite').width = player2.component('Sprite').height = 60 * 6;
-        player2.component('Shiplike').desiredAngleVector = planck.Vec2(1, -0.5);
-        player2.component('Shiplike').moving = true;
+        // this.chunks[0].addChild(player2.component('Sprite'));
+        // player2.component('Sprite').anchor.x = player2.component('Sprite').anchor.y = 0.5;
+        // player2.component('Sprite').zIndex = 5;
+        // player2.component('Sprite').width = player2.component('Sprite').height = 60 * 6;
+        // player2.component('Shiplike').desiredAngleVector = planck.Vec2(1, -0.5);
+        // player2.component('Shiplike').moving = true;
         
-        player2.component('DynamicBody').createBody();
+        // player2.component('DynamicBody').createBody();
         
 
         console.log('done.')
@@ -134,7 +134,7 @@ class World /*extends PIXI.Container*/ {
                 if (worleyNoiseValue / Math.abs(asteroidNoiseValue) < 0.2 && caveNoiseValue < (worleyNoiseValue / Math.abs(asteroidNoiseValue)) * 4) {
                     block.newId(); //changing id
                     //assembling block entity in tilemap
-                    ECS.assemblers.BlockAssembler.Assemble(block, 'ground', (bx + x) * WorldOptions.mTileSize, MH.yToWorld((by + y) * WorldOptions.pTileSize));
+                    ECS.assemblers.BlockAssembler.Assemble(block, 'ground', (bx + x) * WorldOptions.pTileSize + WorldOptions.pTileSize/2, (by + y) * WorldOptions.pTileSize + WorldOptions.pTileSize/2);
                     tilemap.map[by][bx] = block.id; //saving it's id in map matrix
                 }
                 //borders
@@ -142,7 +142,7 @@ class World /*extends PIXI.Container*/ {
                     || (y === 0 && by == 0) || (y === this.tilesHeight - 1 && by == Chunk.chunkSize - 1)) {
                         block.newId(); //changing id
                         //assembling block entity in tilemap
-                        ECS.assemblers.BlockAssembler.Assemble(block, 'ground', (bx + x) * WorldOptions.mTileSize, MH.yToWorld((by + y) * WorldOptions.pTileSize));
+                        ECS.assemblers.BlockAssembler.Assemble(block, 'ground', (bx + x) * WorldOptions.pTileSize + WorldOptions.pTileSize/2, (by + y) * WorldOptions.pTileSize + WorldOptions.pTileSize/2);
                         tilemap.map[by][bx] = block.id; //saving it's id in map matrix
                 }
                 //empty space
@@ -154,6 +154,10 @@ class World /*extends PIXI.Container*/ {
             }
         }
         const chunk = new Chunk(tilemap);
+        const compoundBody = new Entity(chunk.child);
+        compoundBody.newId();
+        compoundBody.addComponent(new ECS.components.CompoundStaticBody(tilemap.map, x * WorldOptions.mTileSize, MH.yToWorld(y * WorldOptions.pTileSize)))
+
         viewport.addChild(chunk);
         return chunk;
     }

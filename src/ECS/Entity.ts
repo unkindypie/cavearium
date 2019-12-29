@@ -2,12 +2,6 @@ import IComponent from "./components/IComponent";
 import ECS from "./ecs";
 import EntityContainer from './EntityContainer'
 
-//components
-import PlayerControlled from './components/PlayerControlled';
-import DymanicBody from './components/DynamicBody';
-import Shiplike from './components/Shiplike';
-
-
 export default class Entity {
     public id: number;
     public entityContainer: EntityContainer;
@@ -48,6 +42,12 @@ export default class Entity {
                 for(let id_ in newContainer.component('StaticBody')){
                     const id = parseInt(id_);
                     newContainer.component('StaticBody')[id].destroyBody();
+                }
+            }
+            if(newContainer.component('CompoundStaticBody')){
+                for(let id_ in newContainer.component('CompoundStaticBody')){
+                    const id = parseInt(id_);
+                    newContainer.component('CompoundStaticBody')[id].destroyBody();
                 }
             }
             

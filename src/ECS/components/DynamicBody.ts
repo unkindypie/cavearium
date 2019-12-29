@@ -17,14 +17,14 @@ export default class DynamicBody extends Body {
         this.massData = {
             mass: 1,
             center: planck.Vec2(),
-            I: 1
+            I: 0.5
         };
         this.angle = 0;
 
         this.fixtureOptions = {
             density: 0.2,
-            friction: 0.3,
-            restitution: 1
+            friction: 3,
+            restitution: 0.1
         }
     }
 
