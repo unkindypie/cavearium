@@ -23,8 +23,10 @@ class World /*extends PIXI.Container*/ {
     public chunks: Chunk[] = [];
     tilesWidth: number;
     tilesHeight: number;
-    caveNoiseIncrement: number = 0.05;
-    asteroidNoiseIncrement: number = 0.002;
+    caveNoiseIncrement: number = 0.05; 
+    // caveNoiseIncrement: number = 0.5; - микро-мирок
+    asteroidNoiseIncrement: number = 0.002; 
+    // asteroidNoiseIncrement: number = 0.05; - микро-мирок
     public visibleChunks: Chunk[] = [];
     public b2World: planck.World = b2World;
 

@@ -13,7 +13,9 @@
   "dependencies": {
     "@types/pixi.js": "^4.8.9",
     "@types/random": "^2.1.0",
+    "bitmap-to-boxes": "^1.0.0",
     "express": "^4.17.1",
+    "ndarray-pack": "^1.2.1",
     "open-simplex-noise": "^1.6.0",
     "pixi-cull": "^0.5.0",
     "pixi-viewport": "^4.2.2",
