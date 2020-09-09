@@ -16,7 +16,7 @@ export default class Entity {
     public component(compName: string): any {
         return this.entityContainer.component(compName)[this.id];
     }
-    public removeEntity() {
+    public delete() {
         //remove entitie's components for every table in that chunk
         this.entityContainer.tables.forEach((table) => {
             delete table[this.id];

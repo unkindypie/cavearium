@@ -11,6 +11,7 @@ import * as planck from 'planck-js';
 import * as MH from '../utils/MathHelper';
 import app from '../pixi/pixiapp';
 import WorldOptions from './WorldOptions';
+import CompoundStaticBodyMember from '../ECS/components/CompoundStaticBodyMember';
 
 export const b2World = planck.World({
     //gravity: planck.Vec2(0, -9)
@@ -158,7 +159,9 @@ class World /*extends PIXI.Container*/ {
         const chunk = new Chunk(tilemap);
         const compoundBody = new Entity(chunk.child);
         compoundBody.newId();
-        compoundBody.addComponent(new ECS.components.CompoundStaticBody(tilemap.map, x * WorldOptions.mTileSize, MH.yToWorld(y * WorldOptions.pTileSize)))
+        const bodyComponent = new ECS.components.CompoundStaticBody(tilemap.map, x * WorldOptions.mTileSize, MH.yToWorld(y * WorldOptions.pTileSize))
+        compoundBody.addComponent(bodyComponent)
+        bodyComponent.initMembers(tilemap);
 
         viewport.addChild(chunk);
         return chunk;

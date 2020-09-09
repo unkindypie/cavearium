@@ -13,9 +13,10 @@ export default interface EntityContainer {
      mRect: PIXI.Rectangle;
      inSimulation: boolean;
      
-     initializeComponentTables: Function;
-     addComponentTable: Function;
-     component: Function;
-     startSimulation: Function;
-     stopSimulation: Function;
+     initializeComponentTables: (componentTables: Array<string>)=>void;
+     addComponentTable:  (componentName: string)=>void;
+     component: (tableName: string) => any[];
+     
+     startSimulation: ()=>void;
+     stopSimulation: ()=>void;
 }

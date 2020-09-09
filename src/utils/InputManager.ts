@@ -1,6 +1,7 @@
 import * as PIXI from 'pixi.js';
 import viewport from '../pixi/viewport';
 import app from '../pixi/pixiapp';
+import WorldOptions from '../world/WorldOptions';
 
 class InputManager {
     public screenPointer: PIXI.Point;
@@ -10,16 +11,18 @@ class InputManager {
         forward: 'w',
         backward: 'd'
     }
-    public actions = {forward: false}
+    public actions = {forward: false, clicked: false}
 
     constructor(){
         this.screenPointer = new PIXI.Point(0, 0);
         this.viewportPointer = new PIXI.Point(0, 0);
         
-        window.onmousemove = (e: any)=>{
+        
+        app.renderer.view.onmousemove = (e: any)=>{
             this.screenPointer.x = e.x != undefined ? e.x : 0;
             this.screenPointer.y = e.y != undefined ? e.y : 0;
             this.viewportPointer = viewport.toWorld(this.screenPointer);
+
         }
     }
 }
@@ -35,5 +38,13 @@ window.onkeyup = (e: any)=>{
     if(e.key == inputManager.keyboardLayout.forward){
         inputManager.actions.forward = false;
     }
+}
+
+window.onmousedown = () => {
+    inputManager.actions.clicked = true;
+}
+
+window.onmouseup = () => {
+    inputManager.actions.clicked = false;
 }
 export default inputManager;

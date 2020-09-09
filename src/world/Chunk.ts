@@ -1,4 +1,5 @@
 import * as PIXI from 'pixi.js'
+
 import viewport from '../pixi/viewport'
 import ECS from '../ECS/ecs'
 import Entity from '../ECS/Entity';
@@ -66,7 +67,7 @@ export default class Chunk extends PIXI.Container implements EntityContainer {
             }
         }
         const graphics = new PIXI.Graphics();
-        graphics.lineStyle(10, 0xFFFFFF, 1);
+        graphics.lineStyle(10, 0xFFFFFF, 0.1);
         //graphics.drawRect(MH.xToScreen(this.rect.x), MH.yToScreen(this.rect.y), MH.xToScreen(this.rect.width), MH.xToScreen(this.rect.height));
         graphics.drawRect(this.pRect.x, this.pRect.y, this.pRect.width, this.pRect.height);
         graphics.endFill();

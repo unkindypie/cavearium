@@ -15,7 +15,7 @@ export default class TilemapRenderSystem extends System {
     //culling system
     public update(container: EntityContainer): void {
         //if it's chunk or whatever go to it's child
-        if (container.constructor.name != 'Tilemap') {
+        if (container.constructor.name !== 'Tilemap') {
             if (container.child != null) this.update(container.child);
             return;
         }

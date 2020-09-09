@@ -1,9 +1,11 @@
+import * as planck from 'planck-js';
+
 import EntityContainer from "../EntityContainer";
 import Entity from "../Entity";
 import ECS from '../ecs';
 import loader from '../../pixi/loader';
 import WorldOptions from '../../world/WorldOptions';
-import * as planck from 'planck-js';
+import CompoundStaticBodyMember from '../components/CompoundStaticBodyMember';
 
 export default class BlockAssembler {
 
@@ -12,6 +14,7 @@ export default class BlockAssembler {
             case 'ground':
                 entity
                     .addComponent(new ECS.components.Sprite(loader.resources['ground'].texture))
+                    .addComponent(new CompoundStaticBodyMember())
                     // .addComponent(new ECS.components.StaticBody(
                     //     new planck.Box(
                     //         WorldOptions.mTileSize / 2,

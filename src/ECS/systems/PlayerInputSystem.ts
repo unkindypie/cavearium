@@ -1,3 +1,5 @@
+import { Vec2 } from "planck-js";
+
 import System from "../System";
 import EntityContainer from '../EntityContainer';
 import inputManager from '../../utils/InputManager';
@@ -5,7 +7,8 @@ import viewport from '../../pixi/viewport';
 import DynamicBody from '../components/DynamicBody';
 import Shiplike from '../components/Shiplike';
 import * as MH from '../../utils/MathHelper';
-import { Vec2 } from "planck-js";
+import WorldOption from '../../world/WorldOptions';
+import WorldOptions from "../../world/WorldOptions";
 
 export default class PlayerInputSystem extends System {
     public update(entityContainer: EntityContainer): void {
@@ -26,6 +29,13 @@ export default class PlayerInputSystem extends System {
                 }
                 else{
                     (entityContainer.component('Shiplike')[id] as Shiplike).moving = false;
+                }
+                if(inputManager.actions.clicked) {
+                    console.log(mouse);
+                    const bx = mouse.x / WorldOption.pTileSize;
+                    const by = mouse.y / WorldOption.pTileSize;
+                    console.log(`block: ${bx}, ${by}`);
+                    // TODO: найди блок и вызвать deleteBlock для CompoundStaticBody
                 }
             }
         }
