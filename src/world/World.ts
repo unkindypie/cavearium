@@ -24,10 +24,10 @@ class World /*extends PIXI.Container*/ {
     public chunks: Chunk[] = [];
     tilesWidth: number;
     tilesHeight: number;
-    caveNoiseIncrement: number = 0.05; 
-    // caveNoiseIncrement: number = 0.5; - микро-мирок
-    asteroidNoiseIncrement: number = 0.002; 
-    // asteroidNoiseIncrement: number = 0.05; - микро-мирок
+    //caveNoiseIncrement: number = 0.05; 
+     caveNoiseIncrement: number = 0.5;// - микро-мирок
+    //asteroidNoiseIncrement: number = 0.002; 
+     asteroidNoiseIncrement: number = 0.05;// - микро-мирок
     public visibleChunks: Chunk[] = [];
     public b2World: planck.World = b2World;
 
@@ -150,7 +150,7 @@ class World /*extends PIXI.Container*/ {
                 }
                 //empty space
                 else {
-                    tilemap.map[by][bx] = -1;
+                    tilemap.map[by][bx] = WorldOptions.EMPTY_ENT_ID;
                 }
                 xoff += this.caveNoiseIncrement;
                 asteroid_xoff += this.asteroidNoiseIncrement;

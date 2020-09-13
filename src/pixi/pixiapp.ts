@@ -9,8 +9,11 @@ const app = {
     stage: new PIXI.Container(),
     loader: new PIXI.Loader()
 };
+app.renderer.view.className = 'app__view'
 
-document.body.appendChild(app.renderer.view);   
+document.body.appendChild(app.renderer.view);
+
+
 export const startGameLoop = (updateCallback: CallableFunction)=>{
     const fps = 30 / 1000; //30 coz logic runs on frameCount % 2 of the fps
     let frameCount = 1;

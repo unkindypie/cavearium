@@ -59,6 +59,15 @@ export default class Entity {
         this.entityContainer.component(component.constructor.name)[this.id] = component;
         return this;
     }
+
+    public listComponents(): IComponent[] {
+        const result: IComponent[] = [];
+        this.entityContainer.tables.forEach(table => {
+            if(table[this.id]) result.push(table[this.id]);
+        })
+        return result;
+    }
+
     public removeComponent(component: IComponent) {
         delete this.entityContainer.component(component.constructor.name)[this.id];
         return this;

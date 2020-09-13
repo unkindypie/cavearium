@@ -38,13 +38,15 @@ export default class CompoundStaticBody implements IComponent {
      * @param y tilemap.map index
      */
     public removeBlock(tilemap: Tilemap, block: Entity, x: number, y: number) {
+        //debugger;
         const member = block.component('CompoundStaticBodyMember') as CompoundStaticBodyMember;
         if(!member?.subbody) return;
 
         block.delete();
+        console.log(member.subbody.includedEntities);
         const subs = CompoundStaticBody.
             decompose(member.subbody.includedEntities);
-
+        console.log(subs);
         this.subbodies = [...this.subbodies.filter(
             s => s !== member.subbody
         ), ...subs];
@@ -60,14 +62,16 @@ export default class CompoundStaticBody implements IComponent {
     // decomposes matrix into the fewest number of shapes for
     // performance reasons
     private static decompose(tilemapMatrix: number[][]): Array<SubBody> {
-        const matrix = tilemapMatrix.map(row => row.map(n => n === -1 ? 0 : 1));
-
+        const matrix = tilemapMatrix.map(row => row.map(n => n === -1 || n === undefined ? 0 : 1));
+        console.log(matrix);
         if(matrix.length === 0) return;
         const ndarray = createNdarray(matrix);
         const parts = decompose(ndarray, true);
 
         const subbodies = [];
+        console.log('tilemap: ');
         for(let part of parts) {
+            console.log('part');
             const x1Ind = part[0][0];
             const y1Ind = part[0][1];
     
@@ -83,7 +87,7 @@ export default class CompoundStaticBody implements IComponent {
             const halfWidth = (x2 - x1)/2;
             const halfHeight = (y2 - y1)/2;
 
-            const shape =  planck.Box(
+            const shape = planck.Box(
                 halfWidth,
                 halfHeight,
                 planck.Vec2(x1 + halfWidth, -(y1 + halfHeight))
@@ -91,12 +95,21 @@ export default class CompoundStaticBody implements IComponent {
             const subBody: SubBody = {shape, includedEntities: []}
             // referencing all the entities(tiles) in this shape
             // and creating smaller tilemap for every part
-            for(let i = y1Ind; i != y1Ind; i++) {
+            for(let i = y1Ind; i <= y2Ind; i++) {
                 subBody.includedEntities[i] = [];
-                for(let j = x1Ind; j != x2Ind; j++) {
-                    subBody.includedEntities[i][j] = tilemapMatrix[i][j];
+                for(let j = 0; j <= x2Ind; j++) {
+                    if(j >= x1Ind) {
+                        subBody.includedEntities[i][j] = tilemapMatrix[i][j];
+                    }
+                    else {
+                        subBody.includedEntities[i][j] = -1;
+                    }
                 }
             }
+            // console.log(x1Ind, x2Ind, y1Ind, y2Ind);
+            // console.log(subBody.includedEntities);
+            // console.log(shape.m_vertices);
+
             subbodies.push(subBody);
         }
         return subbodies;
@@ -113,17 +126,20 @@ export default class CompoundStaticBody implements IComponent {
     }
 
     public initMember(subbody: SubBody, members: CompoundStaticBodyMember[]) {
-        for(let entities of subbody.includedEntities) {
-            for(let entId of entities) 
-            {
+        for(let ids of subbody.includedEntities) {
+            for(let _entId in ids) 
+            {   
+                const entId = ids[Number(_entId)];
                 members[entId].subbody = subbody;
+                //console.log(members[entId])
             }
         }
     }
 
     public initMembers(tilemap: Tilemap) {
         const members = tilemap.component('CompoundStaticBodyMember') as CompoundStaticBodyMember[];
-
+        //debugger;
+        
         this.subbodies.forEach(s => {
             this.initMember(s, members);
         })
