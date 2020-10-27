@@ -43,10 +43,12 @@ export default class CompoundStaticBody implements IComponent {
         if(!member?.subbody) return;
 
         block.delete();
+        member.subbody.includedEntities[y][x] = -1;
         console.log(member.subbody.includedEntities);
+
         const subs = CompoundStaticBody.
             decompose(member.subbody.includedEntities);
-        console.log(subs);
+        console.log(subs, x, y);
         this.subbodies = [...this.subbodies.filter(
             s => s !== member.subbody
         ), ...subs];
@@ -65,13 +67,17 @@ export default class CompoundStaticBody implements IComponent {
         const matrix = tilemapMatrix.map(row => row.map(n => n === -1 || n === undefined ? 0 : 1));
         console.log(matrix);
         if(matrix.length === 0) return;
-        const ndarray = createNdarray(matrix);
+   
+        const ndarray = createNdarray(matrix);/* проблема в этой строчке. 
+            если в мастрице есть n
+         пустых строк([,,,[...], [...]]), то выходит NaN на все элементы
+         */
         const parts = decompose(ndarray, true);
 
         const subbodies = [];
-        console.log('tilemap: ');
+        // console.log('tilemap: ');
         for(let part of parts) {
-            console.log('part');
+            // console.log('part');
             const x1Ind = part[0][0];
             const y1Ind = part[0][1];
     
@@ -102,7 +108,7 @@ export default class CompoundStaticBody implements IComponent {
                         subBody.includedEntities[i][j] = tilemapMatrix[i][j];
                     }
                     else {
-                        subBody.includedEntities[i][j] = -1;
+                        subBody.includedEntities[i][j] = WorldOptions.EMPTY_ENT_ID;
                     }
                 }
             }
@@ -126,11 +132,16 @@ export default class CompoundStaticBody implements IComponent {
     }
 
     public initMember(subbody: SubBody, members: CompoundStaticBodyMember[]) {
+        console.log(subbody.includedEntities);
         for(let ids of subbody.includedEntities) {
+            
             for(let _entId in ids) 
             {   
                 const entId = ids[Number(_entId)];
-                members[entId].subbody = subbody;
+                if(entId != -1) {
+                    members[entId].subbody = subbody;
+
+                }
                 //console.log(members[entId])
             }
         }
