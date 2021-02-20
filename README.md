@@ -3,18 +3,18 @@
 ![](./.readme-assets/demo.gif)
 
 2d game with procedural generation based on opensimplex noise. Written on typescript with render on pixi.js and physics on planck.js(box2d js port).
-It meant to be pet project for learning Typescript & some gamedev patterns.
+It meant to be a pet project for learning Typescript & some gamedev patterns.
 
-> Development state:  [early demo]
+> Development state:  [early-early-early demo]
 
 
 ### Procedural generation
-Game uses combination of warley and opensimplex noises. Opensimplex noise is mapped to
+Game uses a combination of warley and opensimplex noises. Opensimplex noise is mapped to
 warley cells.
 
 ### Engine
 Game uses my own custom engine with implementation of ECS pattern.
-Each entity is combination of separate components and can be defined 
+Each entity is a combination of separate components and can be defined 
 dynamically. ~~well, it's damn js, everything can be defined dynamically but it's different~~
 
 ### World structure
